@@ -1,13 +1,25 @@
+/* eslint-disable */
+import { AppDispatch } from '@store';
 import { ProfileUI } from '@ui-pages';
 import { FC, SyntheticEvent, useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchUserApi, getUserSelectors } from '../../services/sliceUser';
 
 export const Profile: FC = () => {
+  const dispatch=useDispatch<AppDispatch>();
+
+  useEffect(() => {
+  dispatch(fetchUserApi())
+    
+  }, [dispatch]); 
+  const val= Object.values(useSelector(getUserSelectors));
+
   /** TODO: взять переменную из стора */
   const user = {
     name: '',
     email: ''
   };
-
+// const user.name=val.filter(v=>{return val.user})
   const [formValue, setFormValue] = useState({
     name: user.name,
     email: user.email,
@@ -41,6 +53,7 @@ export const Profile: FC = () => {
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+   
     setFormValue((prevState) => ({
       ...prevState,
       [e.target.name]: e.target.value

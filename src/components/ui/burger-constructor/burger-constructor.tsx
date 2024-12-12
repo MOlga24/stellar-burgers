@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React, { FC } from 'react';
 import {
   Button,
@@ -19,7 +20,8 @@ export const BurgerConstructorUI: FC<BurgerConstructorUIProps> = ({
   closeOrderModal
 }) => (
   <section className={styles.burger_constructor}>
-    {constructorItems.bun ? (
+    {constructorItems.bun ? 
+    (
       <div className={`${styles.element} mb-4 mr-4`}>
         <ConstructorElement
           type='top'

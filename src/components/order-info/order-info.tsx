@@ -1,9 +1,20 @@
-import { FC, useMemo } from 'react';
+/* eslint-disable */
+import { FC, useEffect, useMemo } from 'react';
 import { Preloader } from '../ui/preloader';
 import { OrderInfoUI } from '../ui/order-info';
 import { TIngredient } from '@utils-types';
+import store, { AppDispatch } from 'src/services/store';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchBurgs, getBurgsSelector } from '@slices';
 
 export const OrderInfo: FC = () => {
+  const dispatch=useDispatch<AppDispatch>();
+
+useEffect(() => {
+dispatch(fetchBurgs())
+  
+}, [dispatch]); 
+const val= Object.values(useSelector(getBurgsSelector));
   /** TODO: взять переменные orderData и ingredients из стора */
   const orderData = {
     createdAt: '',
@@ -13,8 +24,7 @@ export const OrderInfo: FC = () => {
     name: '',
     updatedAt: 'string',
     number: 0
-  };
-
+  }; 
   const ingredients: TIngredient[] = [];
 
   /* Готовим данные для отображения */

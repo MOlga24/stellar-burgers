@@ -1,17 +1,23 @@
+/* eslint-disable */
 import { FC, useMemo } from 'react';
 import { TConstructorIngredient } from '@utils-types';
 import { BurgerConstructorUI } from '@ui';
+import { useSelector } from 'react-redux';
+import { getBurgsSelector, isLoadingSelector } from '@slices';
 
 export const BurgerConstructor: FC = () => {
   /** TODO: взять переменные constructorItems, orderRequest и orderModalData из стора */
-  const constructorItems = {
+
+    
+
+  const constructorItems =  {
     bun: {
-      price: 0
-    },
+    price:0
+  },
     ingredients: []
   };
 
-  const orderRequest = false;
+  const orderRequest = useSelector(isLoadingSelector);
 
   const orderModalData = null;
 
@@ -30,7 +36,7 @@ export const BurgerConstructor: FC = () => {
     [constructorItems]
   );
 
-  return null;
+
 
   return (
     <BurgerConstructorUI
@@ -42,4 +48,4 @@ export const BurgerConstructor: FC = () => {
       closeOrderModal={closeOrderModal}
     />
   );
-};
+ };

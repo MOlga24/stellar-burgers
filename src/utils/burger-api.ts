@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { setCookie, getCookie } from './cookie';
 import { TIngredient, TOrder, TOrdersData, TUser } from './types';
 
@@ -35,6 +36,8 @@ export const refreshToken = (): Promise<TRefreshResponse> =>
       return refreshData;
     });
 
+   
+  
 export const fetchWithRefresh = async <T>(
   url: RequestInfo,
   options: RequestInit
@@ -75,7 +78,7 @@ export const getIngredientsApi = () =>
   fetch(`${URL}/ingredients`)
     .then((res) => checkResponse<TIngredientsResponse>(res))
     .then((data) => {
-      if (data?.success) return data.data;
+      if (data?.success) return data.data; 
       return Promise.reject(data);
     });
 

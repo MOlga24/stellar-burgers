@@ -1,44 +1,46 @@
 /* eslint-disable */
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { getIngredientsApi, getUserApi } from '@api';
+import { getIngredientsApi} from '@api';
 import { TIngredient } from '@utils-types';
-import axios from 'axios';
-export interface BurgerListState {
-  burgs: TIngredient[];
+import { userRegSlice } from './slices/Regslice';
+export interface IngredientsListState {
+  ingredients: TIngredient[];
   isLoading: boolean;
   error: null | undefined;
 }
-export const initialState: BurgerListState = {
-  burgs: [],
+export const initialState: IngredientsListState = {
+  ingredients: [],
   isLoading: false,
   error: null
 };
 
-export const fetchBurgs = createAsyncThunk('api/burger-api.ts', async () => {
-  const newBurgs = await getIngredientsApi();
-  return newBurgs;
+export const fetchIngredients = createAsyncThunk('api/burger-api.ts', async () => {
+  const newIngredient = await getIngredientsApi();
+  return newIngredient;
 });
 
 
 export const burgerSlice = createSlice({
-  name: 'burgs',
+  name: 'ingredients',
   initialState,
   reducers: {},
   selectors: {
-    getBurgsSelector: (state) => {
-      return state;
+    getIngredientsSelector: (state) => {
+      return state.ingredients;
     },
     isLoadingSelector: (state) => {
       return state.isLoading;
     }
   },
   extraReducers: (builder) => {
-    builder.addCase(fetchBurgs.fulfilled, (state, action) => {
-      state.burgs = action.payload;
+    builder.addCase(fetchIngredients.fulfilled, (state, action) => {
+      state.ingredients = action.payload;
       state.isLoading = false;
     });
   }
 });
 
-export const { getBurgsSelector,isLoadingSelector } = burgerSlice.selectors;
+
+
+export const { getIngredientsSelector,isLoadingSelector } = burgerSlice.selectors;
 export default burgerSlice.reducer;

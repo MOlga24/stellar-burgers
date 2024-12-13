@@ -1,36 +1,32 @@
 /* eslint-disable */
 
 import {
-  applyMiddleware,
   combineReducers,
   configureStore,
-  createStore, 
+
 } from '@reduxjs/toolkit';
-
-
-
-
 import {
   TypedUseSelectorHook,
   useDispatch as dispatchHook,
   useSelector as selectorHook
 } from 'react-redux';
-import  {burgerSlice} from '@slices';
-import  {userSlice} from '../../src/services/sliceUser';
+import  {burgerSlice} from '../../src/services/slices'
+import  {userRegSlice}  from '../../src/services/slices/Regslice';
+import { basketSlice } from './slices/baskerslice';
+
+// import { basketSlice } from '../services/slices/Basketslice';
 
 
-// Заменить на импорт настоящего редьюсера
 const rootReducer =combineReducers({
-
-[userSlice.name]:userSlice.reducer,
 [burgerSlice.name]:burgerSlice.reducer,
-})
+[userRegSlice.name]:userRegSlice.reducer,
+[basketSlice.name]:basketSlice.reducer
+});
 
 const store = configureStore({
-  reducer:rootReducer,
-// {burgs: burgerSlice},
-//userSlice.reducer,
-  devTools: process.env.NODE_ENV !== 'production'
+reducer:rootReducer
+,
+devTools: process.env.NODE_ENV !== 'production'
 });
 export type RootState = ReturnType<typeof rootReducer>;
 export type AppDispatch = typeof store.dispatch;

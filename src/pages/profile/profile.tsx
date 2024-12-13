@@ -1,18 +1,15 @@
 /* eslint-disable */
-import { AppDispatch } from '@store';
+import{ AppDispatch} from 'src/services/store';
 import { ProfileUI } from '@ui-pages';
 import { FC, SyntheticEvent, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchUserApi, getUserSelectors } from '../../services/sliceUser';
+
 
 export const Profile: FC = () => {
   const dispatch=useDispatch<AppDispatch>();
 
-  useEffect(() => {
-  dispatch(fetchUserApi())
-    
-  }, [dispatch]); 
-  const val= Object.values(useSelector(getUserSelectors));
+
+
 
   /** TODO: взять переменную из стора */
   const user = {

@@ -3,18 +3,16 @@ import { FC, useEffect, useMemo } from 'react';
 import { Preloader } from '../ui/preloader';
 import { OrderInfoUI } from '../ui/order-info';
 import { TIngredient } from '@utils-types';
-import store, { AppDispatch } from 'src/services/store';
-import { useDispatch, useSelector } from 'react-redux';
-import { fetchBurgs, getBurgsSelector } from '@slices';
+import store, { AppDispatch, useSelector  } from '..//..//services/store';
+import { useDispatch, UseSelector} from 'react-redux';
+// import { fetchBurgs, getBurgsSelector } from '@slices';
 
 export const OrderInfo: FC = () => {
   const dispatch=useDispatch<AppDispatch>();
+// useEffect(() => {
+// dispatch(fetchBurgs())  
+// }, [dispatch]); 
 
-useEffect(() => {
-dispatch(fetchBurgs())
-  
-}, [dispatch]); 
-const val= Object.values(useSelector(getBurgsSelector));
   /** TODO: взять переменные orderData и ingredients из стора */
   const orderData = {
     createdAt: '',
@@ -25,7 +23,7 @@ const val= Object.values(useSelector(getBurgsSelector));
     updatedAt: 'string',
     number: 0
   }; 
-  const ingredients: TIngredient[] = [];
+  const ingredients= useSelector ((state)=>state.basket.ingredients)
 
   /* Готовим данные для отображения */
   const orderInfo = useMemo(() => {

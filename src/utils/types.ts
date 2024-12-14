@@ -1,3 +1,4 @@
+/* eslint-disable */
 export type TIngredient = {
   _id: string;
   name: string;
@@ -15,7 +16,16 @@ export type TIngredient = {
 export type TConstructorIngredient = TIngredient & {
   id: string;
 };
-
+export const enum RequestStatus {
+	Idle='Idle',
+	Loading='Loading',
+	Success='Success',
+	Failed='Failed',
+}
+export type UserDto = {
+	email: string;
+	name: string;
+};
 export type TOrder = {
   _id: string;
   status: string;
@@ -38,3 +48,24 @@ export type TUser = {
 };
 
 export type TTabMode = 'bun' | 'sauce' | 'main';
+
+export type UserLoginBodyDto = {
+	email: string;
+	password: string;
+};
+
+export type UserRegisterBodyDto = {
+	password: string;
+} & UserDto;
+export type UserResponseToken = ServerResponse<{
+	user: UserDto;
+	accessToken: string;
+	refreshToken: string;
+}>;
+type ServerResponse<T> = {
+	success: boolean;
+} & T;
+
+export type UserResponse = ServerResponse<{
+	user: UserDto;
+}>;

@@ -3,18 +3,24 @@ import { FC, useEffect, useMemo } from 'react';
 import { Preloader } from '../ui/preloader';
 import { OrderInfoUI } from '../ui/order-info';
 import { TIngredient } from '@utils-types';
-import store, { AppDispatch, useSelector  } from '..//..//services/store';
+import store, { AppDispatch, RootState, useSelector  } from '..//..//services/store';
 import { useDispatch, UseSelector} from 'react-redux';
+import { addOrder } from '..//..//services/slices/createOrder';
 // import { fetchBurgs, getBurgsSelector } from '@slices';
 
 export const OrderInfo: FC = () => {
-  const dispatch=useDispatch<AppDispatch>();
+
 // useEffect(() => {
 // dispatch(fetchBurgs())  
 // }, [dispatch]); 
-
+ const ingredients= useSelector ((state)=>state.ingredients.ingredients);
+ 
   /** TODO: взять переменные orderData и ingredients из стора */
-  const orderData = {
+  
+
+  const orderData=
+  // (useSelector ((state)=>state.feed.ordersData.orders))
+  {
     createdAt: '',
     ingredients: [],
     _id: '',
@@ -23,13 +29,13 @@ export const OrderInfo: FC = () => {
     updatedAt: 'string',
     number: 0
   }; 
-  const ingredients= useSelector ((state)=>state.basket.ingredients)
+
 
   /* Готовим данные для отображения */
   const orderInfo = useMemo(() => {
     if (!orderData || !ingredients.length) return null;
 
-    const date = new Date(orderData.createdAt);
+   const date = new Date(orderData.createdAt);
 
     type TIngredientsWithCount = {
       [key: string]: TIngredient & { count: number };

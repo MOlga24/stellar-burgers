@@ -1,5 +1,5 @@
 /* eslint-disable */
-import React, { FC } from 'react';
+import React, { FC, useRef } from 'react';
 import {
   Button,
   ConstructorElement,
@@ -19,11 +19,13 @@ export const BurgerConstructorUI: FC<BurgerConstructorUIProps> = ({
   onOrderClick,
   closeOrderModal
 }) => (
-  <section className={styles.burger_constructor}>
+  
+  <section className={styles.burger_constructor}   >
     {constructorItems.bun?
     (
-      <div className={`${styles.element} mb-4 mr-4`}>
+      <div  className={`${styles.element} mb-4 mr-4`}>
         <ConstructorElement
+     
           type='top'
           isLocked
           text={`${constructorItems.bun.name} (верх)`}
@@ -32,7 +34,7 @@ export const BurgerConstructorUI: FC<BurgerConstructorUIProps> = ({
         />
       </div>
     ) : (
-      <div
+      <div 
         className={`${styles.noBuns} ${styles.noBunsTop} ml-8 mb-4 mr-5 text text_type_main-default`}
       >
         Выберите булки
@@ -43,6 +45,7 @@ export const BurgerConstructorUI: FC<BurgerConstructorUIProps> = ({
         constructorItems.ingredients.map(
           (item: TConstructorIngredient, index: number) => (
             <BurgerConstructorElement
+              
               ingredient={item}
               index={index}
               totalItems={constructorItems.ingredients.length}
@@ -51,7 +54,7 @@ export const BurgerConstructorUI: FC<BurgerConstructorUIProps> = ({
           )
         )
       ) : (
-        <div
+        <div 
           className={`${styles.noBuns} ml-8 mb-4 mr-5 text text_type_main-default`}
         >
           Выберите начинку

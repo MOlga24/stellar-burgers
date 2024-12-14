@@ -15,6 +15,7 @@ export const IngredientDetails: FC = () => {
   const ingredientData=(ingredients.filter((v)=>{if(v._id==ingrIndex.id){return v}}))[0];
 
   if (!ingredientData) {
+    
     return <Preloader />;
   }
   return <IngredientDetailsUI ingredientData={ingredientData} />;

@@ -1,15 +1,17 @@
+import { RootState } from '@store';
 import { Preloader } from '@ui';
 import { FeedUI } from '@ui-pages';
-import { TOrder } from '@utils-types';
 import { FC } from 'react';
-
+import { useSelector } from 'react-redux';
+/* eslint-disable */
 export const Feed: FC = () => {
+  
   /** TODO: взять переменную из стора */
-  const orders: TOrder[] = [];
+  const orders= useSelector((state:RootState)=>state.feed.ordersData.orders)
 
-  if (!orders.length) {
-    return <Preloader />;
-  }
+  // if (!orders.length) {
+  //   return <Preloader />;
+  // }
+  return <FeedUI orders={orders} handleGetFeeds={() => {}} />
 
-  <FeedUI orders={orders} handleGetFeeds={() => {}} />;
 };

@@ -11,7 +11,7 @@ import {
   registerUserApi,
   TLoginData,
   TRegisterData
-} from '@api';
+} from '..//..//utils/burger-api'
 import { TIngredient } from '@utils-types';
 
 export interface BasketState {

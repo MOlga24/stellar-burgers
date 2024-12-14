@@ -1,6 +1,6 @@
 /* eslint-disable */
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { getIngredientsApi, loginUserApi, registerUserApi, TLoginData, TRegisterData} from '@api';
+import { getIngredientsApi, loginUserApi, registerUserApi, TLoginData, TRegisterData} from '..//..//utils/burger-api';
 
 export interface UserRegState {
   user: TRegisterData;

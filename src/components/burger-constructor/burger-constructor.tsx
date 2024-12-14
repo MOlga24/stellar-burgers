@@ -1,16 +1,23 @@
 /* eslint-disable */
-import { FC, useMemo } from 'react';
+import { FC, useEffect, useMemo } from 'react';
 import { TConstructorIngredient, TIngredient } from '@utils-types';
 import { BurgerConstructorUI } from '@ui';
 
 import {  isLoadingSelector } from '@slices';
-import { useSelector } from 'react-redux';
-import { RootState } from '@store';
+import { useDispatch, useSelector } from 'react-redux';
+import { AppDispatch, RootState } from '@store';
+
+import { Link, useNavigate } from 'react-router-dom';
+import { addOrder } from '..//..//services/slices/createOrder';
+import { OrderInfo } from '../order-info';
 
 export const BurgerConstructor: FC = () => { const basket = useSelector((state:RootState)=>state.basket)
   /** TODO: взять переменные constructorItems, orderRequest и orderModalData из стора */
-
- 
+  const dispatch=useDispatch<AppDispatch>();
+    useEffect(() => {
+      dispatch((addOrder(OrderInfo)));
+    }, [dispatch]);
+  
 
   const constructorItems:{bun:TIngredient|undefined, ingredients:TIngredient[]} =  {
     bun:basket.bun,
@@ -19,14 +26,26 @@ export const BurgerConstructor: FC = () => { const basket = useSelector((state:R
 
   const orderRequest =false;
 
-  const orderModalData = null;
+ const navigate = useNavigate();
 
-  const onOrderClick = () => {  
- if (!constructorItems.bun || orderRequest) return
-  
-    ;
+   const onClose = () => {
+    navigate(-1);
   };
-  const closeOrderModal = () => {};
+  const orderModalData = null
+ const closeOrderModal = () => { onClose};
+const orderModalData1 = useSelector((state:RootState)=>state.basket.ingredients);
+const orderModalData2 = useSelector((state:RootState)=>state.order);
+const d=useSelector((state:RootState)=>state.feed.ordersData.orders)
+  const onOrderClick = () => {   
+  
+   
+const orderRequest=true;   
+ 
+ if (!constructorItems.bun || orderRequest)
+  return
+   
+  };
+ 
 
   const price = useMemo(
     () =>

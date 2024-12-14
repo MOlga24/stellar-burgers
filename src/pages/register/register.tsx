@@ -1,33 +1,41 @@
 /* eslint-disable */
-import { FC, SyntheticEvent, useEffect, useState } from 'react';
+import { ChangeEvent, FC, FormEvent,  useState } from 'react';
 import { RegisterUI } from '@ui-pages';
-import {  useSelector } from 'react-redux';
-import { useDispatch, AppDispatch } from '..//..//services/store';
-import { addUser, fetchUserLog, fetchUserReg, getuserRegSelector, logUser } from '..//..//services/slices/Regslice';
-import { log } from 'console';
 
+import { UserRegisterBodyDto } from '@utils-types';
+import { registerUser } from '..//..//services/thunk/user'
+import { useDispatch } from '..//..//services/hooks';
+type RegisterProps = {
+	onRegister?: (dataUser: UserRegisterBodyDto) => void;
+};
 export const Register: FC = () => {
+  const dispatch = useDispatch();
+const userData={
+		email: '',
+		password: '',
+		name: '',
+	};
   const [userName, setUserName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-const dispatch=useDispatch();const t=useSelector(addUser);
-const s=useSelector(logUser)
-// useEffect(() => {
-// dispatch(fetchUserReg())
-  
-// }, [dispatch]); 
-// useEffect(() => {
-//   dispatch(fetchUserLog())
+
+	// const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+	// 	const { name, value } = e.target;
+	// 	setUserData({
+	// 		...userData,
+	// 		[name]: value,
     
-//   }, [dispatch]); 
-// useSelector(getuserRegSelector)
-  const handleSubmit = (e: SyntheticEvent) => {
-const p= dispatch(addUser)
-dispatch(fetchUserReg());
-//dispatch(logUser(s.payload));
-console.log(p);
-console.log(s)
-    e.preventDefault();
+	// 	});
+	// };
+  const [userData1, setUserData1] = useState<UserRegisterBodyDto>({
+		email: '',
+		password: '',
+		name: '',
+	});
+  const handleSubmit = (e: FormEvent) => {
+    setUserData1({...userData1, [email]:setEmail,[userName]:setUserName,[password]:setPassword})
+e.preventDefault();
+  dispatch(registerUser(userData1));    
   };
 
   return (

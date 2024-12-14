@@ -1,8 +1,9 @@
 /* eslint-disable */
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { getIngredientsApi} from '@api';
+
 import { TIngredient } from '@utils-types';
 import { userRegSlice } from './slices/Regslice';
+import { getIngredientsApi } from "..//..//src/utils/burger-api"
 export interface IngredientsListState {
   ingredients: TIngredient[];
   isLoading: boolean;

@@ -1,17 +1,6 @@
 /* eslint-disable */
-import {
-  createAsyncThunk,
-  createSlice,
-  nanoid,
-  PayloadAction
-} from '@reduxjs/toolkit';
-import {
-  getIngredientsApi,
-  loginUserApi,
-  registerUserApi,
-  TLoginData,
-  TRegisterData
-} from '..//..//utils/burger-api'
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+
 import { TIngredient } from '@utils-types';
 
 export interface BasketState {
@@ -37,14 +26,25 @@ export const basketSlice = createSlice({
         };
       }
     },
-    removeBun: (state, action) => {
+    removeBun: (state, { payload }) => {
       state.ingredients = state.ingredients.filter(
-        (b) => b._id !== action.payload._id
+        (b) => state.ingredients.indexOf(b) !== payload
       );
+    },
+    reorderBasket: (
+      state,
+      { payload }: PayloadAction<{ from: number; to: number }>
+    ) => {
+      const { from, to } = payload;
+
+      const ingredients = [...state.ingredients];
+      ingredients.splice(to, 0, ingredients.splice(from, 1)[0]);
+
+      state.ingredients = ingredients;
     }
   }
 });
 
-export const { addBun, removeBun } = basketSlice.actions;
+export const { addBun, removeBun, reorderBasket } = basketSlice.actions;
 
 export default basketSlice.reducer;

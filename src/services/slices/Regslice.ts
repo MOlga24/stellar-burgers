@@ -1,73 +1,120 @@
 /* eslint-disable */
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { getIngredientsApi, loginUserApi, registerUserApi, TLoginData, TRegisterData} from '..//..//utils/burger-api';
+import {
+  getIngredientsApi,
+  getUserApi,
+  loginUserApi,
+  logoutApi,
+  registerUserApi,
+  TLoginData,
+  TRegisterData
+} from '..//..//utils/burger-api';
+import { deleteCookie, setCookie } from '..//..//utils/cookie';
+import { RequestStatus, TUser, UserRegisterBodyDto } from '@utils-types';
 
-export interface UserRegState {
-  user: TRegisterData;
-  isLoading: boolean;
-  error: null | undefined;
+// export interface UserRegState {
+//   user: TRegisterData;
+//   // isLoading: boolean;
+//   // error: null | undefined;
+// }
+export interface TUserState {
+  user: UserRegisterBodyDto;
+  isAuthChecked: boolean;
+  requestStatus: RequestStatus;
 }
-export interface UserLogState {
-  user: TLoginData;
-  isLoading: boolean;
-  error: null | undefined;
-}
-export const initialState: UserRegState  = {
-  user: {email:'', name: '', password:''},
-  isLoading: false,
-  error: null
-};
-export const loginState: UserLogState  = {
-  user: {email:'', password:''},
-  isLoading: false,
-  error: null
+export const initialState: TUserState = {
+  user: { email: '', name: '', password: '' },
+  isAuthChecked: false,
+  requestStatus: RequestStatus.Idle
 };
 
-export const fetchUserReg = createAsyncThunk('userReg/fetchUserReg', async () => {
-  const newReg = await registerUserApi(initialState.user);
-  return newReg;
-});
+export const checkUserAuth = createAsyncThunk(
+  `userReg/checkUserAuth`,
+  async () => {
+    return await getUserApi();
+  }
+);
+export const fetchUserReg = createAsyncThunk(
+  'userReg/fetchUserReg',
+  async (initialState: TRegisterData) => {
+    const newReg = await registerUserApi(initialState);
+    setCookie('accessToken', newReg.accessToken);
+    setCookie('refreshToken', newReg.refreshToken);
+    return newReg;
+  }
+);
 
-export const fetchUserLog = createAsyncThunk('userLog/fetchUserlog', async () => {
-  const newLog = await loginUserApi(loginState.user);
-  return newLog;
-});
+export const fetchUserLog = createAsyncThunk(
+  'userLog/fetchUserlog',
+  async (dataUser: TLoginData) => {
+    const newLog = await loginUserApi(dataUser);
+    setCookie('accessToken', newLog.accessToken);
+    setCookie('refreshToken', newLog.refreshToken);
+    return newLog;
+  }
+);
+
+export const fetchUserOut = createAsyncThunk(
+  'userReg/fetchUserOut',
+  async () => {
+    const newLog = await logoutApi();
+    deleteCookie('accessToken');
+    deleteCookie('refreshToken');
+    return newLog;
+  }
+);
 export const userRegSlice = createSlice({
   name: 'userReg',
   initialState,
-  reducers: { 
-   addUser(state,action){state.user.name=action.payload.name;
-    state.user.email=action.payload.email;
-    state.user.password=action.payload.password;
-    state.isLoading=false;
-   },
-   logUser(state,action){state.user.name=action.payload.name;
-    state.user.email=action.payload.email;
-    state.user.password=action.payload.password;
-    state.isLoading=false;
-   }
-   
-
+  reducers: {
+    addUser(state, action) {
+      state.user.name = action.payload.user.name;
+      state.user.email = action.payload.user.email;
+      state.user.password = action.payload.user.password;
+      state.requestStatus = RequestStatus.Success;
     },
+    logUser(state, action) {
+      state.user.name = action.payload.user.name;
+      state.user.email = action.payload.user.email;
+      state.requestStatus = RequestStatus.Success;
+    },
+    logOutUser: (state) => {
+      state.user = { email: '', name: '', password: '' };
+    }
+  },
   selectors: {
-    getuserRegSelector: (state) => {
-      return state; },
-  
-      isLoadingSelector: (state) => {
-      return state.isLoading;   }
-   
- 
+    getUserName: (state) => {
+      state.user.name;
+    },
+    getUserEmail: (state) => {
+      state.user.name;
+    },
+    getIsAuthChecked: (state) => state.isAuthChecked
   },
   extraReducers: (builder) => {
-    builder.addCase(fetchUserReg.fulfilled, (state, action) => {
-      state.user = action.payload.user;
-      state.isLoading = false;
-      
-    });
+    builder
+      .addCase(checkUserAuth.fulfilled, (state, action) => {
+        state.user.name = action.payload.user.name;
+        state.user.email = action.payload.user.email;
+        state.requestStatus = RequestStatus.Success;
+      })
+      .addCase(fetchUserReg.fulfilled, (state, action) => {
+        state.user.name = action.payload.user.name;
+        state.user.email = action.payload.user.email;
+        state.requestStatus = RequestStatus.Success;
+      })
+      .addCase(fetchUserLog.fulfilled, (state, action) => {
+        state.user.name = action.payload.user.name;
+        state.user.email = action.payload.user.email;
+      })
+      .addCase(fetchUserOut.fulfilled, (state, action) => {
+        state.user.name = '';
+        state.user.email = '';
+      });
   }
 });
 
-
-export const {addUser, logUser} =userRegSlice.actions
-export const { getuserRegSelector,isLoadingSelector } = userRegSlice.selectors;
+export const { addUser, logUser, logOutUser } = userRegSlice.actions;
+export const { getUserName, getIsAuthChecked, getUserEmail } =
+  userRegSlice.selectors;
 export default userRegSlice.reducer;

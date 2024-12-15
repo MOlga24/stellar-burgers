@@ -5,15 +5,13 @@ import { BurgerIngredientUI } from '@ui';
 import { TBurgerIngredientProps } from './type';
 import { AppDispatch, RootState } from '@store';
 import { useDispatch, useSelector } from 'react-redux';
-import { addBun} from '../../services/slices/baskerslice';
+import { addBun} from '../../services/slices/basketSlice';
 
 
 export const BurgerIngredient: FC<TBurgerIngredientProps> = memo(
   ({ ingredient, count }) => {
     const location = useLocation();
     const dispatch = useDispatch<AppDispatch>();  
-const t=useSelector((store:RootState)=>store.basket)
-
     const handleAdd = () => {
    let count=0;
       dispatch(

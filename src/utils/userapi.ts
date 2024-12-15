@@ -1,6 +1,7 @@
 /* eslint-disable */
 import { UserLoginBodyDto, UserRegisterBodyDto, UserResponse, UserResponseToken } from '@utils-types';
 import { getCookie, setCookie } from './cookie';
+import { TRegisterData } from './burger-api';
 
 interface ErrorBurger extends Error {
 	statusCode: number;
@@ -85,9 +86,12 @@ export class BurgerApi {
 		return Promise.reject(dataUser);
 	}
 
-	async registerUser(data: UserRegisterBodyDto) {
+	async registerUser(data: TRegisterData) {
 		const dataUser = await this.request<UserResponseToken>('auth/register', {
 			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json;charset=utf-8'
+			  },
 			body: JSON.stringify(data),
 		});
 

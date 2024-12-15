@@ -17,10 +17,8 @@ export const orderSlice = createSlice({
   name: 'order',
   initialState,
   reducers: {
-    addOrder: (state, action) => {
-     
-       return{...state,data:action.payload}
-      
+    addOrder: (state, action) => {     
+       return{...state,data:action.payload}      
       }
     },
     // removeBun: (state, action) => {

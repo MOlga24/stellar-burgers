@@ -17,8 +17,6 @@ UserResponse,
 	}
 );
 
-
-
 export const registerUser = createAppAsyncThunk<
 UserResponseToken,
 	UserRegisterBodyDto

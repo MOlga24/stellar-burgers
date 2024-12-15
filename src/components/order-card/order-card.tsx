@@ -9,16 +9,18 @@ import { AppDispatch, RootState } from '@store';
 import { addOrder } from '..//..//services/slices/createOrder';
 
 const maxIngredients = 6;
-  
+
 export const OrderCard: FC<OrderCardProps> = memo(({ order }) => {
-  const basket = useSelector((state:RootState)=>state.ingredients)
+
+  const basket = useSelector((state: RootState) => state.ingredients);
+
   const location = useLocation();
+
   const dispatch = useDispatch<AppDispatch>();
+
   /** TODO: взять переменную из стора */
   const ingredients = basket.ingredients;
-
-
- const orderInfo = useMemo(() => {
+  const orderInfo = useMemo(() => {
     if (!ingredients.length) return null;
 
     const ingredientsInfo = order.ingredients.reduce(
@@ -40,7 +42,7 @@ export const OrderCard: FC<OrderCardProps> = memo(({ order }) => {
         : 0;
 
     const date = new Date(order.createdAt);
- 
+
     return {
       ...order,
       ingredientsInfo,
@@ -52,9 +54,6 @@ export const OrderCard: FC<OrderCardProps> = memo(({ order }) => {
   }, [order, ingredients]);
 
   if (!orderInfo) return null;
-
-// dispatch(addOrder(orderInfo));
-
   return (
     <OrderCardUI
       orderInfo={orderInfo}

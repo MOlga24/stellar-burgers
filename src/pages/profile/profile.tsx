@@ -1,22 +1,23 @@
 /* eslint-disable */
-import{ AppDispatch} from 'src/services/store';
+import{ AppDispatch, RootState} from 'src/services/store';
 import { ProfileUI } from '@ui-pages';
 import { FC, SyntheticEvent, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import {  getUserEmail, getUserName } from '..//..//services/slices/Regslice';
 
 
 export const Profile: FC = () => {
   const dispatch=useDispatch<AppDispatch>();
 
-
+const userName=useSelector((state: RootState) => state.userReg.user);
 
 
   /** TODO: взять переменную из стора */
   const user = {
-    name: '',
-    email: ''
+    name:  userName.name,
+    email: userName.email
   };
-// const user.name=val.filter(v=>{return val.user})
+
   const [formValue, setFormValue] = useState({
     name: user.name,
     email: user.email,
@@ -29,7 +30,7 @@ export const Profile: FC = () => {
       name: user?.name || '',
       email: user?.email || ''
     }));
-  }, [user]);
+  }, []);
 
   const isFormChanged =
     formValue.name !== user?.name ||

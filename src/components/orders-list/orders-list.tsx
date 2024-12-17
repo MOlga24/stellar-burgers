@@ -1,5 +1,5 @@
 import { FC, memo } from 'react';
-
+/* eslint-disable */
 import { OrdersListProps } from './type';
 import { OrdersListUI } from '@ui';
 
@@ -8,5 +8,5 @@ export const OrdersList: FC<OrdersListProps> = memo(({ orders }) => {
     (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
   );
 
-  return <OrdersListUI orderByDate={orderByDate} />;
+  return <OrdersListUI  orderByDate={orderByDate} />;
 });

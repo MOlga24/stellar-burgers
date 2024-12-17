@@ -14,7 +14,7 @@ import  {burgerSlice} from '../../src/services/slices';
 import { basketSlice } from '../../src/services/slices/basketSlice';
 import burgerApi from '..//..//src/utils/userapi';
 import { userSlice } from '../../src/services/slices/user';
-import { orderSlice } from './slices/createOrder';
+import { orderSlice } from './slices/orderSlice';
 import { feedSlice } from './slices/feedSlice';
 import { userRegSlice } from '..//..//src/services/slices/Regslice';
 
@@ -22,7 +22,7 @@ import { userRegSlice } from '..//..//src/services/slices/Regslice';
 
 const rootReducer =combineReducers({
 [burgerSlice.name]:burgerSlice.reducer,
-// [userSlice.name]: userSlice.reducer,
+[userSlice.name]: userSlice.reducer,
 [basketSlice.name]:basketSlice.reducer,
 [orderSlice.name]: orderSlice.reducer,
 [feedSlice.name]:feedSlice.reducer,

@@ -4,6 +4,7 @@ import { ProfileUI } from '@ui-pages';
 import { FC, SyntheticEvent, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {  getUserEmail, getUserName } from '..//..//services/slices/Regslice';
+import { fetchUserOrders } from '..//..//services/slices/orderSlice';
 
 
 export const Profile: FC = () => {
@@ -35,10 +36,9 @@ const userName=useSelector((state: RootState) => state.userReg.user);
   const isFormChanged =
     formValue.name !== user?.name ||
     formValue.email !== user?.email ||
-    !!formValue.password;
-
-  const handleSubmit = (e: SyntheticEvent) => {
-    e.preventDefault();
+    !!formValue.password; 
+  const handleSubmit = (e: SyntheticEvent) => {e.preventDefault();
+         
   };
 
   const handleCancel = (e: SyntheticEvent) => {

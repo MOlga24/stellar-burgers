@@ -2,21 +2,22 @@
 import { FC, useEffect, useMemo } from 'react';
 import { TIngredient } from '@utils-types';
 import { BurgerConstructorUI } from '@ui';
-
+const _ = require('lodash');
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '@store';
 
 import { useNavigate } from 'react-router-dom';
-import { addOrder } from '..//..//services/slices/createOrder';
+import { addOrder, fetchOrderBurger } from '../../services/slices/orderSlice';
 import { OrderInfo } from '../order-info';
+import { IngredientDetails } from '../ingredient-details';
 
 export const BurgerConstructor: FC = () => {
   const basket = useSelector((state: RootState) => state.basket);
   /** TODO: взять переменные constructorItems, orderRequest и orderModalData из стора */
   const dispatch = useDispatch<AppDispatch>();
-  useEffect(() => {
-    dispatch(addOrder(OrderInfo));
-  }, [dispatch]);
+  // useEffect(() => {
+  //   dispatch(addOrder(orderModalData));
+  // }, [dispatch]);
 
   const constructorItems: {
     bun: TIngredient | undefined;
@@ -30,19 +31,34 @@ export const BurgerConstructor: FC = () => {
 
   const navigate = useNavigate();
 
-  const onClose = () => {
-    navigate(-1);
+  const onClose = () => {navigate('/')
+ 
   };
-  const orderModalData = null;
+//  const orderModalData = null;
   const closeOrderModal = () => {
-    onClose;
+    window.location.href = '/profile';
+ 
   };
 
-  const d = useSelector((state: RootState) => state.feed.ordersData.orders);
-  const onOrderClick = () => {
-    const orderRequest = true;
 
-    if (!constructorItems.bun || orderRequest) return;
+   const order=useSelector((state: RootState) => state.basket.id);
+  const orderModalData=null
+  //useSelector((state: RootState) => state.order.order);
+
+  const onOrderClick = () => { 
+    const orderRequest = false 
+    
+
+if(order) {console.log(order)}
+ {dispatch(fetchOrderBurger(order)); 
+ //dispatch(addOrder(orderModalData))
+  
+  
+ console.log(orderModalData) 
+};
+
+    if (!constructorItems.bun || orderRequest) return;  
+
   };
 
   const price = useMemo(

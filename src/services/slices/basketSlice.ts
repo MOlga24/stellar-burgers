@@ -6,24 +6,30 @@ import { TIngredient } from '@utils-types';
 export interface BasketState {
   bun: TIngredient | undefined;
   ingredients: TIngredient[];
+id:string[]
 }
 
 export const initialState: BasketState = {
   bun: undefined,
-  ingredients: []
+  ingredients: [],
+  id:[]
+
 };
 export const basketSlice = createSlice({
   name: 'basket',
   initialState,
   reducers: {
     addBun: (state, action) => {
-      if (action.payload.type === 'bun') {
-        return { ...state, bun: action.payload };
-      } else {
-        return {
+      if (action.payload.type === 'bun') {    
+ 
+        return { ...state, bun: action.payload,id: [...state.id,action.payload._id]};
+      } else {    
+        return {       
           ...state,
-          ingredients: [...state.ingredients, action.payload]
-        };
+          ingredients: [...state.ingredients, action.payload],
+          id: [...state.id,action.payload._id]
+        
+        };  
       }
     },
     removeBun: (state, { payload }) => {

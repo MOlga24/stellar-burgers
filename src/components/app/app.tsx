@@ -18,25 +18,30 @@ import {
   Routes,
 
   useNavigate,
-  useLocation
+  useLocation,
+  useParams
 } from 'react-router-dom';
-import { AppHeader, IngredientDetails, Modal, OrderInfo } from '@components';
+import { AppHeader, IngredientDetails, Modal, OrderCard, OrderInfo } from '@components';
 import { useEffect } from 'react';
 import { fetchIngredients } from '@slices';
 import { useDispatch } from 'react-redux';
 import { AppDispatch} from '..//..//services/store';
 import ProtectedRoute from '../protectedRoute/protected-route';
 import { fetchOrders } from '..//..//services/slices/feedSlice';
+import { fetchUserOrders, getOrders } from '..//..//services/slices/orderSlice';
 
 
 const App = () => {
+  const {index} = useParams<{index: string}>();
   const dispatch = useDispatch<AppDispatch>();
+ 
+ 
   useEffect(() => {
     dispatch(fetchIngredients());
   }, [dispatch]);
   useEffect(() => {
     dispatch(fetchOrders());
-  }, [dispatch]);
+  }, []);
   const location = useLocation();
   const background = location.state?.background;
   const navigate = useNavigate();
@@ -49,7 +54,7 @@ const App = () => {
       <Routes location={background || location}>
         <Route path='/' element={<ConstructorPage />} />
         <Route path='/feed' element={<Feed />} />
-        <Route path='/login' element={ <Login /> } />
+        <Route path='/login' element={<Login />} />
         <Route
           path='/register'
           element={
@@ -85,9 +90,9 @@ const App = () => {
         <Route
           path='/profile/orders'
           element={
-            <ProtectedRoute onlyUnAuth>
+           
               <ProfileOrders />
-            </ProtectedRoute>
+        
           }
         />
         <Route path='*' element={<NotFound404 />} />       
@@ -112,7 +117,7 @@ const App = () => {
               <Modal title='' onClose={onClose}>
                 <OrderInfo />
               </Modal>
-            }
+            } 
           />
           <Route
             path='/ingredients/:id'

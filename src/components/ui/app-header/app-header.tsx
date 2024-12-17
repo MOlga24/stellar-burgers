@@ -32,7 +32,7 @@ export const AppHeaderUI: FC<TAppHeaderUIProps> = ({ userName }) => (
         </>
         <>
           <NavLink
-            to='/feed/:number'
+            to='/feed'
             style={{ textDecoration: 'underline' }}
             className={({ isActive }) =>
               `text text_type_main-default ml-2 ${isActive ? styles.link_active : ''}`
@@ -42,7 +42,7 @@ export const AppHeaderUI: FC<TAppHeaderUIProps> = ({ userName }) => (
             <ListIcon type={'primary'} />
           </NavLink>
           <NavLink
-            to='/feed/:number'
+            to='/feed'
             style={{ textDecoration: 'underline' }}
             className={({ isActive }) =>
               `text text_type_main-default ml-2 ${isActive ? styles.link_active : ''}`

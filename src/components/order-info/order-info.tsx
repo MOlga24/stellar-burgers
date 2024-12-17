@@ -1,39 +1,32 @@
 /* eslint-disable */
-import { FC, useEffect, useMemo } from 'react';
+import { FC, useMemo } from 'react';
 import { Preloader } from '../ui/preloader';
 import { OrderInfoUI } from '../ui/order-info';
-import { TIngredient } from '@utils-types';
-import store, { AppDispatch, RootState, useSelector  } from '..//..//services/store';
-import { useDispatch, UseSelector} from 'react-redux';
-import { addOrder } from '..//..//services/slices/createOrder';
-// import { fetchBurgs, getBurgsSelector } from '@slices';
+import { TIngredient, TOrder } from '@utils-types';
+import {  useSelector  } from '..//..//services/store';
+import {  useParams } from 'react-router-dom';
 
 export const OrderInfo: FC = () => {
-
+  const {number}= useParams();
+  const number1=Number(number)
 // useEffect(() => {
 // dispatch(fetchBurgs())  
 // }, [dispatch]); 
- const ingredients= useSelector ((state)=>state.ingredients.ingredients);
- 
-  /** TODO: взять переменные orderData и ingredients из стора */
-  
-
-  const orderData=
-  // (useSelector ((state)=>state.feed.ordersData.orders))
-  {
-    createdAt: '',
-    ingredients: [],
-    _id: '',
-    status: '',
-    name: '',
-    updatedAt: 'string',
-    number: 0
-  }; 
-
+ const ingredients= useSelector ((state)=>state.ingredients.ingredients); 
+  /** TODO: взять переменные orderData и ingredients из стора */ 
+  const ordersData=
+ useSelector ((state)=>state.feed.ordersData.orders);
+function isOrderNumber(element:TOrder){const num=number1; return element.number===num}
+const orderNumber= ordersData.findIndex(isOrderNumber)
+   const orderData= ordersData[orderNumber]
 
   /* Готовим данные для отображения */
   const orderInfo = useMemo(() => {
-    if (!orderData || !ingredients.length) return null;
+
+ 
+   if (!orderData || !ingredients.length) 
+      // {console.log(Number(number))
+      return null;
 
    const date = new Date(orderData.createdAt);
 

@@ -1,5 +1,6 @@
 import React, { FC, memo } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, NavLink } from 'react-router-dom';
+/* eslint-disable */
 import {
   CurrencyIcon,
   FormattedDate
@@ -11,13 +12,14 @@ import { OrderCardUIProps } from './type';
 import { OrderStatus } from '@components';
 
 export const OrderCardUI: FC<OrderCardUIProps> = memo(
-  ({ orderInfo, maxIngredients, locationState }) => (
+  ({ orderInfo, maxIngredients, locationState }) => { return(
     <Link
-      to={orderInfo.number.toString()}
-      relative='path'
+    to={'/feed/'+(orderInfo.number.toString())}
+      relative='route'
       state={locationState}
       className={`p-6 mb-4 mr-2 ${styles.order}`}
     >
+    
       <div className={styles.order_info}>
         <span className={`text text_type_digits-default ${styles.number}`}>
           #{String(orderInfo.number).padStart(6, '0')}
@@ -74,6 +76,6 @@ export const OrderCardUI: FC<OrderCardUIProps> = memo(
           <CurrencyIcon type='primary' />
         </div>
       </div>
-    </Link>
-  )
+    </Link>)
+  }
 );

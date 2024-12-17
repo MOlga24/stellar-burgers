@@ -9,9 +9,9 @@ export const Feed: FC = () => {
   /** TODO: взять переменную из стора */
   const orders= useSelector((state:RootState)=>state.feed.ordersData.orders)
 
-  // if (!orders.length) {
-  //   return <Preloader />;
-  // }
+  if (!orders.length) {
+    return <Preloader />;
+  }
   return <FeedUI orders={orders} handleGetFeeds={() => {}} />
 
 };

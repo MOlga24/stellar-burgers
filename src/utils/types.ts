@@ -12,7 +12,7 @@ export type TIngredient = {
   image_large: string;
   image_mobile: string;
 };
-
+export interface UserParams{id:string}
 export type TConstructorIngredient = TIngredient & {
   id: string;
 };
@@ -55,7 +55,7 @@ export type UserLoginBodyDto = {
 };
 
 export type UserRegisterBodyDto = {
-	password: string;
+	password?: string;
 } & UserDto;
 export type UserResponseToken = ServerResponse<{
 	user: UserDto;

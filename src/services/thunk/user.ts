@@ -1,7 +1,8 @@
 /* eslint-disable */
 import { UserLoginBodyDto, UserRegisterBodyDto, UserResponse, UserResponseToken } from '@utils-types';
-import { setCookie } from '../../utils/cookie';
+import { deleteCookie, setCookie } from '../../utils/cookie';
 import { createAppAsyncThunk } from '../hooks';
+
 
 
 
@@ -43,3 +44,15 @@ UserResponseToken,
 			return data;
 	}
 );
+export const fetchUserOut = createAppAsyncThunk<
+UserResponseToken,
+	UserRegisterBodyDto
+>(
+	'userReg/fetchUserOut',
+	async (_, { extra: api }) => {
+	  const logOut = await api.logoutApi();
+	  deleteCookie('accessToken');
+	  deleteCookie('refreshToken');console.log(logOut);
+	  return logOut; 
+	}
+  );

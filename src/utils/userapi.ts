@@ -82,7 +82,7 @@ export class BurgerApi {
 			body: JSON.stringify(data),
 		});
 
-		if (dataUser?.success) return dataUser;
+		if (dataUser?.success) {console.log(dataUser); return dataUser; }
 		return Promise.reject(dataUser);
 	}
 
@@ -95,7 +95,7 @@ export class BurgerApi {
 			body: JSON.stringify(data),
 		});
 
-		if (dataUser?.success) return dataUser;
+		if (dataUser?.success) {console.log(dataUser); return dataUser; };
 		return Promise.reject(dataUser);
 	}
 
@@ -108,6 +108,18 @@ export class BurgerApi {
 		if (dataUser?.success) return dataUser;
 		return Promise.reject(dataUser);
 	}
-}
+	async  logoutApi  () {
+		const dataUser = await this.request<UserResponseToken>('auth/logout', {
+	method: 'POST',
+	headers: {
+	  'Content-Type': 'application/json;charset=utf-8'
+	},
+	body: JSON.stringify({
+	  token: localStorage.getItem('refreshToken')
+	})
+  });
+  if (dataUser?.success) {console.log(dataUser); return dataUser; }
+  return Promise.reject(dataUser);
+}}
 
 export default new BurgerApi(BURGER_API_URL);

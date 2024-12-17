@@ -1,10 +1,20 @@
+/* eslint-disable */
+import { AppDispatch, RootState } from '@store';
 import { ProfileOrdersUI } from '@ui-pages';
-import { TOrder } from '@utils-types';
-import { FC } from 'react';
+import { FC, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchUserOrders } from '..//..//services/slices/orderSlice';
 
 export const ProfileOrders: FC = () => {
-  /** TODO: взять переменную из стора */
-  const orders: TOrder[] = [];
-
+  const dispatch = useDispatch<AppDispatch>();
+   useEffect(() => {
+      dispatch(fetchUserOrders());
+     
+    }, []);
+  const orders = useSelector(
+    (state: RootState) => state.order.orders
+  );
+console.log(orders);
+  /** TODO: взять переменную из стора  */
   return <ProfileOrdersUI orders={orders} />;
 };

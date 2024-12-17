@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 /* eslint-disable */
 import { isActionPending, isActionRejected } from '..//..//..//src/utils/redux'
-import { checkUserAuth, loginUser, registerUser } from '../thunk/user';
+import { checkUserAuth, fetchUserOut, loginUser, registerUser } from '../thunk/user';
 import { RequestStatus, UserDto } from '@utils-types';
 
 export const sliceName = 'user';
@@ -25,6 +25,9 @@ export const userSlice = createSlice({
 		authCheck: state => {
 			state.isAuthChecked = true;
 		},
+		userLogout: (state) => {
+			state.data =  { email: '', name: ''};
+		  }
 	},
 	extraReducers: builder => {
 		builder
@@ -40,6 +43,10 @@ export const userSlice = createSlice({
 				state.data = action.payload.user;
 				state.requestStatus = RequestStatus.Success;
 			})
+			// .addCase(fetchUserOut.fulfilled, (state, action) => {
+			// 	state.data.email = '';
+			// 	state.data.name = '';
+			// })
 			.addMatcher(isActionPending(USER_SLICE_NAME), state => {
 				state.requestStatus = RequestStatus.Loading;
 			})

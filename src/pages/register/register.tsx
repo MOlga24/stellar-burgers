@@ -38,9 +38,9 @@ export const Register: FC = () => {
 
 e.preventDefault();
 const userData={email:email,password:password,name:userName,}	    
-//  console.log(registerUserApi(userData1))
-dispatch(fetchUserReg(userData));
 
+// dispatch(fetchUserReg(userData));
+dispatch(registerUser(userData));
   };
 
   return (

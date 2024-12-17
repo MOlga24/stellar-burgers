@@ -1,5 +1,5 @@
 /* eslint-disable */
-import { FC, memo, useEffect, useRef, useState } from 'react';
+import { FC, memo} from 'react';
 import { BurgerConstructorElementUI } from '@ui';
 import { BurgerConstructorElementProps } from './type';
 import { useDispatch, useSelector } from 'react-redux';
@@ -9,16 +9,13 @@ import { useSearchParams } from 'react-router-dom';
 
 export const BurgerConstructorElement: FC<BurgerConstructorElementProps> = memo(
   ({ ingredient, index, totalItems }) => {
-    const [searchParams, setSearchParams] = useSearchParams();
-
-    const r = useSelector((state: RootState) => state.basket.ingredients);
+    const [searchParams, setSearchParams] = useSearchParams();  
 
     const handleMoveDown = () => {
       dispatch(reorderBasket({ from: index, to: index + 1 }));
     };
     const handleMoveUp = () => {
-      dispatch(reorderBasket({ from: index, to: index - 1 }));
-      console.log(r);
+      dispatch(reorderBasket({ from: index, to: index - 1 }));    
     };
 
     const dispatch = useDispatch<AppDispatch>();

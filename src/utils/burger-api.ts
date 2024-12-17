@@ -1,11 +1,11 @@
 /* eslint-disable */
 import { setCookie, getCookie } from './cookie';
 import { TIngredient, TOrder, TOrdersData, TUser } from './types';
-/* eslint-disable */
+
 const URL = process.env.BURGER_API_URL;
 
 const checkResponse = <T>(res: Response): Promise<T> =>
-  res.ok ? res.json() : res.json().then((err) => Promise.reject(err));
+  res.ok ? res.json()  : res.json().then((err) => Promise.reject(err));
 
 type TServerResponse<T> = {
   success: boolean;
@@ -165,7 +165,9 @@ export type TLoginData = {
   password: string;
 };
 
+
 export const loginUserApi = (data: TLoginData) =>
+
   fetch(`${URL}/auth/login`, {
     method: 'POST',
     headers: {
@@ -173,8 +175,9 @@ export const loginUserApi = (data: TLoginData) =>
     },
     body: JSON.stringify(data)
   })
+
     .then((res) => checkResponse<TAuthResponse>(res))
-    .then((data) => {
+    .then((data) => { console.log('вот данные с сервера:'+ data)
       if (data?.success) return data;
       return Promise.reject(data);
     });
@@ -233,6 +236,6 @@ export const logoutApi = () =>
       'Content-Type': 'application/json;charset=utf-8'
     },
     body: JSON.stringify({
-      token: localStorage.getItem('refreshToken')
+      token: getCookie('refreshToken')
     })
-  }).then((res) => checkResponse<TServerResponse<{}>>(res));
+  }).then((res) => {checkResponse<TServerResponse<{}>>(res);console.log(res)});

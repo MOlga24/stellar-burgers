@@ -1,10 +1,10 @@
 /* eslint-disable */
-import { FC, memo, useEffect, useState } from 'react';
+import { FC, memo } from 'react';
 import { useLocation } from 'react-router-dom';
 import { BurgerIngredientUI } from '@ui';
 import { TBurgerIngredientProps } from './type';
-import { AppDispatch, RootState } from '@store';
-import { useDispatch, useSelector } from 'react-redux';
+import { AppDispatch } from '@store';
+import { useDispatch } from 'react-redux';
 import { addBun} from '../../services/slices/basketSlice';
 
 
@@ -18,11 +18,8 @@ export const BurgerIngredient: FC<TBurgerIngredientProps> = memo(
         addBun(
       ingredient
         )
-      );
-
-      
+      );      
     };
-
     return (
       <BurgerIngredientUI
         ingredient={ingredient}

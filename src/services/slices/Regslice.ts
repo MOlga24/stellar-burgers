@@ -7,10 +7,11 @@ import {
   logoutApi,
   registerUserApi,
   TLoginData,
-  TRegisterData
+  TRegisterData,
+  updateUserApi
 } from '..//..//utils/burger-api';
 import { deleteCookie, setCookie } from '..//..//utils/cookie';
-import { RequestStatus, TUser, UserRegisterBodyDto } from '@utils-types';
+import { RequestStatus, TUser, UserDto, UserRegisterBodyDto } from '@utils-types';
 
 // export interface UserRegState {
 //   user: TRegisterData;
@@ -18,12 +19,12 @@ import { RequestStatus, TUser, UserRegisterBodyDto } from '@utils-types';
 //   // error: null | undefined;
 // }
 export interface TUserState {
-  user: UserRegisterBodyDto;
+data: UserDto;
   isAuthChecked: boolean;
   requestStatus: RequestStatus;
 }
 export const initialState: TUserState = {
-  user: { email: '', name: '', password: '' },
+	data: {name:'', email:''},
   isAuthChecked: false,
   requestStatus: RequestStatus.Idle
 };
@@ -60,6 +61,17 @@ export const fetchUserLog = createAsyncThunk(
     return newLog;
   }
 );
+
+export const fetchUserUpdate = createAsyncThunk(
+  'userLog/fetchUserupdate',
+  async (dataUser:  Partial<TRegisterData>) => {
+    const updateUser = await updateUserApi(dataUser);
+    console.log(updateUser)
+    // setCookie('accessToken', newLog.accessToken);
+    // setCookie('refreshToken', newLog.refreshToken);
+    return updateUser;
+  }
+);
 export const logoutUser = createAsyncThunk(
   'user/logoutUser',
   (_, { dispatch }) => {
@@ -89,27 +101,31 @@ export const userRegSlice = createSlice({
   initialState,
   reducers: {
     userLogout: (state) => {
-      state.user = { email: '', name: '', password: '' };
+      state.data = { email: '', name: ''};
     },
     addUser(state, action) {
-      state.user.name = action.payload.user.name;
-      state.user.email = action.payload.user.email;
-      state.user.password = action.payload.user.password;
-      state.requestStatus = RequestStatus.Success;
+      state.data.name= action.payload.name
+			state.data.email = action.payload.email;		
+			state.requestStatus = RequestStatus.Success;
     },
     logUser(state, action) {
-      state.user.name = action.payload.user.name;
-      state.user.email = action.payload.user.email;
-      state.requestStatus = RequestStatus.Success;
+      state.data.name= action.payload.name
+			state.data.email = action.payload.email;		
+			state.requestStatus = RequestStatus.Success;
     },
+    updateUser(state, action) {
+      state.data.name= action.payload.name
+			state.data.email = action.payload.email;		
+			state.requestStatus = RequestStatus.Success;
+    }
    
   },
   selectors: {
     getUserName: (state) => {
-      state.user.name;
+      state.data.name
     },
     getUserEmail: (state) => {
-      state.user.name;
+      state.data.email
     },
     getIsAuthChecked: (state) => state.isAuthChecked
   },
@@ -118,29 +134,34 @@ export const userRegSlice = createSlice({
       .addCase(checkUserAuth.fulfilled, (state, action) => {
         // state.user.name = action.payload.user.name;
         // state.user.email = action.payload.user.email;
-        state.user=action.payload.user,
+        state.data=action.payload.user
         state.requestStatus = RequestStatus.Success;
       })
       .addCase(fetchUserReg.fulfilled, (state, action) => {
         // state.user.name = action.payload.user.name;
         // state.user.email = action.payload.user.email;
-        state.user=action.payload.user,
+        state.data=action.payload.user,
         state.requestStatus = RequestStatus.Success;
       })
       .addCase(fetchUserLog.fulfilled, (state, action) => {
         // state.user.name = action.payload.user.name;
         // state.user.email = action.payload.user.email;
-        state.user=action.payload.user
+        state.data=action.payload.user
+      })
+      .addCase(fetchUserUpdate.fulfilled, (state, action) => {
+        // state.user.name = action.payload.user.name;
+        // state.user.email = action.payload.user.email;
+        state.data=action.payload.user
       })
       .addCase(fetchUserOut.fulfilled, (state, action) => {
-        state.user.name = '';
-        state.user.email = '';
+        state.data.name = '';
+        state.data.email = '';
     
       });
   }
 });
 
-export const { addUser, logUser, userLogout } = userRegSlice.actions;
+export const { addUser, logUser, userLogout, updateUser} = userRegSlice.actions;
 export const { getUserName, getIsAuthChecked, getUserEmail } =
   userRegSlice.selectors;
 export default userRegSlice.reducer;

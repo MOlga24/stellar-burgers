@@ -2,10 +2,13 @@
 import { FC, SyntheticEvent, useState } from 'react';
 import { LoginUI } from '@ui-pages';
 import { useDispatch, useSelector } from 'react-redux';
-import { AppDispatch } from '@store';
-import { fetchUserLog, logUser } from '..//..//services/slices/Regslice';
+import { AppDispatch, RootState } from '@store';
+
 import { fetchWithRefresh, getUserApi } from 'src/utils/burger-api';
-import { loginUser } from '..//..//services/thunk/user';
+
+import { addLoginUser } from '..//..//services/slices/user';
+import { fetchUserLog, logUser } from '..//..//services/slices/Regslice';
+
 
 export const Login: FC = () => {
   const [email, setEmail] = useState('');
@@ -19,14 +22,20 @@ export const Login: FC = () => {
 	// const onChangePassword: React.ReactEventHandler<HTMLInputElement> = (e) => {
 	// 	setPassword(e.currentTarget.value);
 	// };
-  const dispatch = useDispatch<AppDispatch>();  
+  const dispatch = useDispatch<AppDispatch>();   
+   const loginData=useSelector((state:RootState)=>state.userReg.data)
   const handleSubmit = (e: SyntheticEvent) => {
     const userData={email:email,password:password}	 
-  //  localStorage.setItem('login',login)	
+  
+//  window.location.href = '/';
     if (!userData.email || !userData.password) {
 			return;
 		}
-		dispatch(loginUser(userData)); 
+		dispatch(fetchUserLog(userData)); 
+    localStorage.setItem('email',email);
+    localStorage.setItem('password',password);
+    logUser(loginData)
+
   e.preventDefault();
   };
 

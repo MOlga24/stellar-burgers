@@ -1,13 +1,13 @@
 /* eslint-disable */
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { TOrder } from '@utils-types';
-import { getOrdersApi, orderBurgerApi } from '../../utils/burger-api';
+import { getOrdersApi, orderBurgerApi, TNewOrderResponse } from '../../utils/burger-api';
 
 export interface OrderState {
-  order: TOrder | undefined;
+  order: TOrder | null;
   data: string[];
   orders: TOrder[];
-
+  requestStatus :boolean;
   isLoading: boolean;
   error: null | undefined;
 }
@@ -23,6 +23,7 @@ export const initialState: OrderState = {
     updatedAt: 'string',
     number: 0
   },
+  requestStatus :false,
   orders: [],
   isLoading: false,
   error: null
@@ -44,7 +45,7 @@ export const orderSlice = createSlice({
   initialState,
   reducers: {
     addOrder: (state, action) => {
-      return { ...state, order: action.payload };
+      return { ...state, order: action.payload, requestStatus:action.payload.requestStatus };
     },
     getOrders: (state, action) => {
       return { ...state, ordersData: action.payload };
@@ -60,15 +61,14 @@ export const orderSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      .addCase(fetchOrderBurger.fulfilled, (state, action) => {
+      .addCase(fetchOrderBurger.fulfilled, (state, action: PayloadAction<TNewOrderResponse>) => {
         state.order = action.payload.order;
-        // state.requestStatus = RequestStatus.Success;
+         state.requestStatus = action.payload.success
       })
       .addCase(
         fetchUserOrders.fulfilled,
         (state, action: PayloadAction<TOrder[]>) => {
-          state.orders = action.payload;
-          // state.requestStatus = RequestStatus.Success;
+          state.orders = action.payload;          
         }
       );
   }

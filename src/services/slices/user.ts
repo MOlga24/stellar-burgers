@@ -1,4 +1,4 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 /* eslint-disable */
 import { isActionPending, isActionRejected } from '..//..//..//src/utils/redux'
 import { checkUserAuth, fetchUserOut, loginUser, registerUser } from '../thunk/user';
@@ -8,13 +8,13 @@ export const sliceName = 'user';
 export const USER_SLICE_NAME = 'user';
 export interface TUserState {
 	isAuthChecked: boolean;
-	data: UserDto | null;
+	data: UserDto;
 	requestStatus: RequestStatus;
 }
 
 const initialState: TUserState = {
 	isAuthChecked: false,
-	data: null,
+	data: {name:'', email:''},
 	requestStatus: RequestStatus.Idle,
 };
 
@@ -27,7 +27,12 @@ export const userSlice = createSlice({
 		},
 		userLogout: (state) => {
 			state.data =  { email: '', name: ''};
-		  }
+		  },
+		  addLoginUser:(state, action:PayloadAction< UserDto>)=> {
+			state.data.name= action.payload.name
+			state.data.email = action.payload.email;		
+			state.requestStatus = RequestStatus.Success;
+		  },
 	},
 	extraReducers: builder => {
 		builder
@@ -57,10 +62,11 @@ export const userSlice = createSlice({
 	selectors: {
 		getUser: state => state.data,
 		getIsAuthChecked: state => state.isAuthChecked,
+	
 	},
 });
 
 
 
-export const userActions = userSlice.actions;
+export const  {addLoginUser, userLogout } = userSlice.actions;
 export const userSelectors = userSlice.selectors;

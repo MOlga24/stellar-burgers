@@ -1,14 +1,26 @@
-import { FC, SyntheticEvent, useState } from 'react';
+import { FC, FormEvent, useState } from 'react';
 import { RegisterUI } from '@ui-pages';
+import { fetchUserReg, selectLoading } from '..//..//services/slices/userSlice';
+import { useSelector, useDispatch } from 'react-redux';
+import { AppDispatch } from '..//..//services/store';
+import { Preloader } from '@ui';
 
 export const Register: FC = () => {
+  const dispatch = useDispatch<AppDispatch>();
   const [userName, setUserName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const loading = useSelector(selectLoading);
 
-  const handleSubmit = (e: SyntheticEvent) => {
+  const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
+    const userData = { email: email, password: password, name: userName };
+    dispatch(fetchUserReg(userData));
   };
+
+  if (loading) {
+    return <Preloader />;
+  }
 
   return (
     <RegisterUI

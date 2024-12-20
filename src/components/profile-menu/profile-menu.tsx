@@ -1,11 +1,21 @@
 import { FC } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { ProfileMenuUI } from '@ui';
+import { useDispatch } from 'react-redux';
+import { AppDispatch } from '..//..//services/store';
+import { fetchUserLogOut } from '..//..//services/slices/userSlice';
 
 export const ProfileMenu: FC = () => {
   const { pathname } = useLocation();
-
-  const handleLogout = () => {};
-
+  const dispatch = useDispatch<AppDispatch>();
+  const navigate = useNavigate();
+  const handleLogout = async () => {
+    try {
+      await dispatch(fetchUserLogOut()).unwrap();
+      navigate('/');
+    } catch (error) {
+      console.error('не удалось выгрузить пользователя', error);
+    }
+  };
   return <ProfileMenuUI handleLogout={handleLogout} pathname={pathname} />;
 };

@@ -1,0 +1,22 @@
+npm ERR! code ERESOLVE
+npm ERR! ERESOLVE unable to resolve dependency tree
+npm ERR! 
+npm ERR! While resolving: react-canonical@0.1.0
+npm ERR! Found: storybook@7.6.20
+npm ERR! node_modules/storybook
+npm ERR!   dev storybook@"^7.6.10" from the root project
+npm ERR! 
+npm ERR! Could not resolve dependency:
+npm ERR! peer storybook@"^8.2.0 || ^8.3.0-0 || ^8.4.0-0 || ^8.5.0-0 || ^8.6.0-0" from @chromatic-com/storybook@3.2.2
+npm ERR! node_modules/@chromatic-com/storybook
+npm ERR!   dev @chromatic-com/storybook@"3.2.2" from the root project
+npm ERR! 
+npm ERR! Fix the upstream dependency conflict, or retry
+npm ERR! this command with --force or --legacy-peer-deps
+npm ERR! to accept an incorrect (and potentially broken) dependency resolution.
+npm ERR! 
+npm ERR! 
+npm ERR! For a full report see:
+npm ERR! C:\Users\User\AppData\Local\npm-cache\_logs\2024-12-11T10_32_41_318Z-eresolve-report.txt
+
+npm ERR! A complete log of this run can be found in: C:\Users\User\AppData\Local\npm-cache\_logs\2024-12-11T10_32_41_318Z-debug-0.log

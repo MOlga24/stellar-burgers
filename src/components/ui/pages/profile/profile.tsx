@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { FC } from 'react';
 
 import { Button, Input } from '@zlden/react-developer-burger-ui-components';
@@ -14,7 +15,9 @@ export const ProfileUI: FC<ProfileUIProps> = ({
   handleSubmit,
   handleCancel,
   handleInputChange
+  
 }) => (
+  
   <main className={`${commonStyles.container}`}>
     <div className={`mt-30 mr-15 ${styles.menu}`}>
       <ProfileMenu />

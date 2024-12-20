@@ -1,25 +1,22 @@
 /* eslint-disable */
-import{ AppDispatch, RootState} from 'src/services/store';
+import { AppDispatch, RootState, useSelector } from '..//..//services/store';
 import { ProfileUI } from '@ui-pages';
 import { FC, SyntheticEvent, useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import {  fetchUserUpdate, getUserEmail, getUserName, updateUser } from '..//..//services/slices/Regslice';
-import { fetchUserOrders } from '..//..//services/slices/orderSlice';
-
+import { useDispatch } from 'react-redux';
+import {
+  fetchUserUpdate,
+  selectLoading,
+  selectRequestStatus,
+  selectUser
+} from '..//..//services/slices/Regslice';
+import { Preloader } from '@ui';
+import { TUser } from '@utils-types';
 
 export const Profile: FC = () => {
-  const dispatch=useDispatch<AppDispatch>();
-
-const userName=useSelector((state: RootState) => state.userReg.data);
-const userUpdate=useSelector((state: RootState) => state.userReg.data);
-console.log(userName)
-
-  /** TODO: взять переменную из стора */
-  const user = {
-    name:  userName?.name,
-    email: userName?.email
-  };
-
+  const dispatch = useDispatch<AppDispatch>();
+  const loading = useSelector(selectLoading);
+  const user = useSelector(selectUser) as TUser;
+  const requestStatus=useSelector(selectRequestStatus);
   const [formValue, setFormValue] = useState({
     name: user.name,
     email: user.email,
@@ -30,21 +27,26 @@ console.log(userName)
     setFormValue((prevState) => ({
       ...prevState,
       name: user?.name || '',
-      email: user?.email || '',
- 
+      email: user?.email || ''
     }));
   }, []);
 
   const isFormChanged =
     formValue.name !== user?.name ||
     formValue.email !== user?.email ||
-    !!formValue.password; 
+    !!formValue.password;
   const handleSubmit = (e: SyntheticEvent) => {
-    dispatch(fetchUserUpdate(formValue));
-dispatch(updateUser(userUpdate));
-console.log(userUpdate)
     e.preventDefault();
-         
+    dispatch(
+      fetchUserUpdate({
+        name: formValue.name,
+        email: formValue.email,
+        password: formValue.password
+      })     
+     
+    );
+ 
+
   };
 
   const handleCancel = (e: SyntheticEvent) => {
@@ -57,13 +59,14 @@ console.log(userUpdate)
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-   
     setFormValue((prevState) => ({
       ...prevState,
       [e.target.name]: e.target.value
     }));
   };
-
+  if (loading) {
+    return <Preloader />;
+  }
   return (
     <ProfileUI
       formValue={formValue}

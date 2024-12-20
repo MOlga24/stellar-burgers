@@ -19,31 +19,36 @@ import {
 
   useNavigate,
   useLocation,
-  useParams
+
 } from 'react-router-dom';
-import { AppHeader, IngredientDetails, Modal, OrderCard, OrderInfo } from '@components';
+import { AppHeader, IngredientDetails, Modal,  OrderInfo } from '@components';
 import { useEffect } from 'react';
 import { fetchIngredients } from '@slices';
 import { useDispatch } from 'react-redux';
 import { AppDispatch} from '..//..//services/store';
-import ProtectedRoute from '../protectedRoute/protected-route';
-import { fetchOrders } from '..//..//services/slices/feedSlice';
-import { fetchUserOrders, getOrders } from '..//..//services/slices/orderSlice';
+import {  checkUserAuth} from '..//..//services/slices/Regslice';
+import { ProtectedRoute } from '../protectedRoute/protected-route';
 
 
-const App = () => {
-  const {index} = useParams<{index: string}>();
-  const dispatch = useDispatch<AppDispatch>();
+export const App = () => {
  
- 
+ const dispatch = useDispatch<AppDispatch>();   
+    const location = useLocation();
+    const locationState=location.state as {background?:Location}
+    const background = locationState && location.state?.background;
+     useEffect(() => {
+        dispatch(checkUserAuth())
+         
+       }, [dispatch]);
+   
+   
+  
+     
   useEffect(() => {
     dispatch(fetchIngredients());
+
   }, [dispatch]);
-  useEffect(() => {
-    dispatch(fetchOrders());
-  }, []);
-  const location = useLocation();
-  const background = location.state?.background;
+  // const background = location.state?.background;
   const navigate = useNavigate();
   const onClose = () => {
     navigate(-1);
@@ -51,55 +56,67 @@ const App = () => {
   return (
     <div className={styles.app}>
       <AppHeader />
-      <Routes location={background || location}>
+     
+      <Routes 
+  location={background || location}
+      >
         <Route path='/' element={<ConstructorPage />} />
         <Route path='/feed' element={<Feed />} />
-        <Route path='/login' element={<Login />} />
+        <Route
+          path='/login'
+          element={
+            <ProtectedRoute onlyUnAuth>
+              <Login />
+            </ProtectedRoute>
+          }
+        />
         <Route
           path='/register'
-          element={
+          element={<ProtectedRoute onlyUnAuth>
          
-              <Register />
+              <Register /></ProtectedRoute>
           
           }
         />
         <Route
           path='/forgot-password'
           element={
-            <ProtectedRoute onlyUnAuth>
+            <ProtectedRoute>
               <ForgotPassword />
-            </ProtectedRoute>
+          </ProtectedRoute>
           }
         />
         <Route
           path='/reset-password'
-          element={
-            <ProtectedRoute onlyUnAuth>
+          element={ <ProtectedRoute>
+        
               <ResetPassword />
-            </ProtectedRoute>
+        </ProtectedRoute>
           }
         />
         <Route
-          path='/profile'
-          element={
+      
+          path='/profile' 
+          element={         
+            // <ProtectedRoute>
           
               <Profile />
-        
+       // </ProtectedRoute>
           }
         />
         <Route
           path='/profile/orders'
           element={
-           
+          //  <ProtectedRoute >
               <ProfileOrders />
-        
+      //  </ProtectedRoute>
           }
         />
         <Route path='*' element={<NotFound404 />} />       
      <Route path='/profile/orders/:number' element={<OrderInfo />} />
         <Route path='/ingredients/:id' element={<IngredientDetails />} />
         <Route path='/feed/:number' element={<OrderInfo />} />      
-       
+    
       </Routes>
       {background && (
         <Routes>
@@ -122,7 +139,7 @@ const App = () => {
           <Route
             path='/ingredients/:id'
             element={
-              <Modal title='' onClose={onClose}>
+              <Modal title='Детали ингредиента' onClose={onClose}>
                 <IngredientDetails />
               </Modal>
             }
@@ -132,4 +149,4 @@ const App = () => {
     </div>
   );
 };
-export default App;
+// export default App;

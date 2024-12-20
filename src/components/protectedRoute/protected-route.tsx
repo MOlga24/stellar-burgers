@@ -1,41 +1,49 @@
 /* eslint-disable */
 import { useSelector } from 'react-redux';
-import { Navigate, useLocation } from 'react-router-dom';
+import { Navigate, Outlet, useLocation, useNavigate } from 'react-router-dom';
 
-import { userSelectors } from '../../services/slices/user';
 import { Preloader } from '@ui';
+import { RootState } from '@store';
+import { selectIsAuthenticated, selectIsCheck, selectUser } from '..//..//services/slices/Regslice';
 
 
 type ProtectedRouteProps = {
 	onlyUnAuth?: boolean;
-	children: React.ReactNode;
+	children: React.ReactElement
 };
 
-function ProtectedRoute({ children, onlyUnAuth }: ProtectedRouteProps) {
-	const location = useLocation();
-	const user = useSelector(userSelectors.getUser);
-	const isAuthChecked = useSelector(userSelectors.getIsAuthChecked);
+export const ProtectedRoute=({onlyUnAuth,children }: ProtectedRouteProps) =>{
+	const location = useLocation();	
+	const user=useSelector(selectUser );
+const isCheck = useSelector(selectIsCheck );
 
-	if (!isAuthChecked) {
-		console.log('WAIT USER CHECKOUT');
-		return <Preloader/>;
+	if (!isCheck) {console.log('1:'+isCheck,user,onlyUnAuth); 
+		return <Preloader />;}
+		
+
+	
+
+	
+	if (onlyUnAuth && user) {	console.log('2:'+isCheck, user, onlyUnAuth);
+		const from = location.pathname|| { pathname: '/' };		
+	//	const backgroundLocation = location.state?.from?.background || null;
+	console.log(from)
+	return <Navigate replace to={from} 		/>
+
+		
 	}
 
-	if (onlyUnAuth && user) {
-		console.log('NAVIGATE FROM LOGIN TO INDEX');
-		const from = location.state?.from || { pathname: '/' };
-		const backgroundLocation = location.state?.from?.background || null;
-		return <Navigate replace to={from} state={{ background: backgroundLocation }} />;
+	if (!onlyUnAuth && !user) {console.log('3:'+ isCheck,user,onlyUnAuth); 
+		return <Navigate  to='/login'
+		state={{ from:location}} />;
+	
 	}
 
-	if (!onlyUnAuth && !user) {
-		console.log('NAVIGATE FROM PAGE TO LOGIN');
-		return <Navigate replace to={'/login'} state={{ from: {...location, background: location.state?.background, state: null}}} />;
-	}
 
-	console.log('RENDER COMPONENT');
+
 
 	return children;
-}
 
-export default ProtectedRoute;
+};
+
+

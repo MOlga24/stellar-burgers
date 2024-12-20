@@ -22,7 +22,7 @@ import { userRegSlice } from '..//..//src/services/slices/Regslice';
 
 const rootReducer =combineReducers({
 [burgerSlice.name]:burgerSlice.reducer,
-[userSlice.name]: userSlice.reducer,
+// [userSlice.name]: userSlice.reducer,
 [basketSlice.name]:basketSlice.reducer,
 [orderSlice.name]: orderSlice.reducer,
 [feedSlice.name]:feedSlice.reducer,

@@ -1,48 +1,24 @@
 /* eslint-disable */
-import { ChangeEvent, FC, FormEvent,  useEffect,  useState } from 'react';
+import { FC, FormEvent,  useState } from 'react';
 import { RegisterUI } from '@ui-pages';
 
-import { UserRegisterBodyDto } from '@utils-types';
-import { registerUser } from '..//..//services/thunk/user'
-
-import { registerUserApi, TRegisterData } from '..//..//utils/burger-api';
-import { addUser, fetchUserReg } from '..//..//services/slices/Regslice';
+import { fetchUserReg, selectLoading } from '..//..//services/slices/Regslice';
 import { useSelector, useDispatch  } from 'react-redux';
 import { AppDispatch } from '..//..//services/store';
-type RegisterProps = {
-	onRegister?: (dataUser: UserRegisterBodyDto) => void;
-};
+import { Preloader } from '@ui';
 export const Register: FC = () => {
   const dispatch = useDispatch<AppDispatch>();
-// const userData={
-// 		email: '',
-// 		password: '',
-// 		name: '',
-// 	};
   const [userName, setUserName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-
-
-  // const [userData, setUserData] = useState<TRegisterData>({
-	// 	email: '',
-	// 	password: '',
-	// 	name: '',
-	// });
- 	const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-		// const { name, value } = e.target;
-		
-	};
-
+  const loading=useSelector(selectLoading);
   const handleSubmit = (e: FormEvent) => {
-
 e.preventDefault();
-const userData={email:email,password:password,name:userName,}	    
+const userData={email:email,password:password,name:userName,}	  
 
-// dispatch(fetchUserReg(userData));
-dispatch(registerUser(userData));
+dispatch(fetchUserReg(userData));
   };
-
+if (loading) {return <Preloader/>}
   return (
     <RegisterUI
       errorText=''

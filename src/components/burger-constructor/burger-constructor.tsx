@@ -1,24 +1,34 @@
 /* eslint-disable */
-import { FC, useEffect, useMemo } from 'react';
-import { TIngredient } from '@utils-types';
+import { FC, useMemo, useState } from 'react';
+import { TIngredient, TOrder } from '@utils-types';
 import { BurgerConstructorUI } from '@ui';
-const _ = require('lodash');
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '@store';
-
+import {  
+  clearOrder,
+  fetchOrderBurger, 
+} from '../../services/slices/orderSlice';
+import { TNewOrderResponse } from 'src/utils/burger-api';
+import { clearBasket } from '..//..//services/slices/basketSlice';
+import { selectIsAuthenticated } from '..//..//services/slices/Regslice';
 import { useNavigate } from 'react-router-dom';
-import { addOrder, fetchOrderBurger } from '../../services/slices/orderSlice';
-import { OrderInfo } from '../order-info';
-import { IngredientDetails } from '../ingredient-details';
 
 export const BurgerConstructor: FC = () => {
   const basket = useSelector((state: RootState) => state.basket);
   /** TODO: взять переменные constructorItems, orderRequest и orderModalData из стора */
   const dispatch = useDispatch<AppDispatch>();
-  useEffect(() => {
-    dispatch(addOrder(orderModalData));
-  }, []);
-
+const isAuthenticated= useSelector(selectIsAuthenticated);
+  const [orderModalData, setOrderModalData] = useState<TOrder | null>(null);
+const navigate=useNavigate();
+  const onChange = (value: TNewOrderResponse) => {
+    setOrderModalData(value.order);
+    setOrderRequest(!value.success);
+  };
+ 
+  const orderRequestinit = useSelector(
+    (state: RootState) => state.order.requestStatus
+  );
+  const [orderRequest, setOrderRequest] = useState(orderRequestinit);
   const constructorItems: {
     bun: TIngredient | undefined;
     ingredients: TIngredient[];
@@ -26,38 +36,22 @@ export const BurgerConstructor: FC = () => {
     bun: basket.bun,
     ingredients: basket.ingredients
   };
-
-
-
-  const navigate = useNavigate();
-
-  const onClose = () => {
-  const  orderModalData=null;
-    const orderRequest = !orderSuccess;
+  const order = useSelector((state: RootState) => state.basket.id);
+  const closeOrderModal = () => {    
+  dispatch(clearOrder(order));
+  setOrderRequest(false);
+  setOrderModalData(null);   
+  dispatch(clearBasket(basket));
   };
- const order = useSelector((state: RootState) => state.basket.id);
- const orderModalData = useSelector((state: RootState) => state.order.order);
-  const orderSuccess = useSelector(
-    (state: RootState) => state.order.requestStatus
-  );  
-  const orderRequest = orderSuccess;
-  const closeOrderModal = () => {
-    
-    const orderRequest =!orderSuccess;
-    const orderModalData=null
-  window.location.href = '/';
-  };
-
- 
   const onOrderClick = () => {
-
-    const orderRequest = true;
-
-    if (order) 
-    {   
+    if(!isAuthenticated){return navigate('/login'); }
+    if (order.length) {
+      setOrderRequest(true);
       dispatch(fetchOrderBurger(order))
-    if (orderModalData) { console.log(orderModalData);const orderRequest = false;}
-    // dispatch(addOrder(order))      
+        .unwrap()
+        .then((payload) => onChange(payload));
+    } else {
+      alert('добавьте заказ');
     }
     if (!constructorItems.bun || orderRequest) return;
   };

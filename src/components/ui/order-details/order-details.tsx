@@ -1,4 +1,4 @@
-import React from 'react';
+import React from 'react';/* eslint-disable */
 import styles from './order-details.module.css';
 import doneImg from '../../../images/done.svg';
 import { OrderDetailsUIProps } from './type';

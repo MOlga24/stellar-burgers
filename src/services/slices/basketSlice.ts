@@ -1,41 +1,44 @@
 /* eslint-disable */
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-
+import uuid from 'react-uuid';
 import { TIngredient } from '@utils-types';
 
 export interface BasketState {
   bun: TIngredient | undefined;
   ingredients: TIngredient[];
-id:string[]
+  id: string[];
 }
 
 export const initialState: BasketState = {
   bun: undefined,
   ingredients: [],
-  id:[]
-
+  id: []
 };
 export const basketSlice = createSlice({
   name: 'basket',
   initialState,
   reducers: {
-    addBun: (state, action) => {
-      if (action.payload.type === 'bun') {    
- 
-        return { ...state, bun: action.payload,id: [...state.id,action.payload._id]};
-      } else {    
-        return {       
-          ...state,
-          ingredients: [...state.ingredients, action.payload],
-          id: [...state.id,action.payload._id]
-        
-        };  
-      }
+    addBun: {
+      reducer: (state, { payload }: PayloadAction<TIngredient>) => {
+        state.id.push(payload._id);
+        if (payload.type === 'bun') {
+          state.bun = payload;
+          state.id.push(payload._id);
+        } else {
+          state.ingredients.push(payload);
+        }
+      },
+      prepare: (ingredient: TIngredient) => ({
+        payload: { ...ingredient, id: uuid() }
+      })
     },
     removeBun: (state, { payload }) => {
       state.ingredients = state.ingredients.filter(
         (b) => state.ingredients.indexOf(b) !== payload
       );
+    },
+    clearBasket: (state, action) => {
+      (state.bun = undefined), (state.ingredients = []), (state.id = []);
     },
     reorderBasket: (
       state,
@@ -51,6 +54,7 @@ export const basketSlice = createSlice({
   }
 });
 
-export const { addBun, removeBun, reorderBasket } = basketSlice.actions;
+export const { addBun, removeBun, reorderBasket, clearBasket } =
+  basketSlice.actions;
 
 export default basketSlice.reducer;

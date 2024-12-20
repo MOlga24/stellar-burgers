@@ -1,11 +1,12 @@
-import React, { FC } from 'react';
+import React, { FC, memo } from 'react';
 import { OrderStatusUIProps } from './type';
+/* eslint-disable */
+export const OrderStatusUI: FC<OrderStatusUIProps> = ({ textStyle, text }) => {return(
 
-export const OrderStatusUI: FC<OrderStatusUIProps> = ({ textStyle, text }) => (
   <span
     className='text text_type_main-default pt-2'
     style={{ color: textStyle }}
   >
     {text}
   </span>
-);
+)};

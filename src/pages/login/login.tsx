@@ -1,43 +1,47 @@
 /* eslint-disable */
-import { FC, SyntheticEvent, useState } from 'react';
+import { FC, SyntheticEvent, useEffect, useState } from 'react';
 import { LoginUI } from '@ui-pages';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '@store';
 
-import { fetchWithRefresh, getUserApi } from 'src/utils/burger-api';
-
+import { fetchWithRefresh, getUserApi, TLoginData } from '..//..//utils/burger-api';
+import { Navigate} from 'react-router-dom';
 import { addLoginUser } from '..//..//services/slices/user';
-import { fetchUserLog, logUser } from '..//..//services/slices/Regslice';
+import { fetchUserLog,selectIsAuthenticated,userRegSlice } from '..//..//services/slices/Regslice';
+import { useNavigate } from 'react-router-dom';
+import { Preloader } from '@ui';
+import { setCookie } from '..//..//utils/cookie';
+
 
 
 export const Login: FC = () => {
-  const [email, setEmail] = useState('');
+  const [email, setEmail] = useState(localStorage.getItem('email')||'');
   const [password, setPassword] = useState('');
-  // const [login, setLogin] = useState(localStorage.getItem('login')||'');
-	// const [password, setPassword] = useState('');
-	// const onChangeLogin: React.ReactEventHandler<HTMLInputElement> = (e) => {
-	// 	//localStorage.setItem('login',e.currentTarget.value);
-	// 	setLogin(e.currentTarget.value);
-	// };
-	// const onChangePassword: React.ReactEventHandler<HTMLInputElement> = (e) => {
-	// 	setPassword(e.currentTarget.value);
-	// };
-  const dispatch = useDispatch<AppDispatch>();   
-   const loginData=useSelector((state:RootState)=>state.userReg.data)
-  const handleSubmit = (e: SyntheticEvent) => {
-    const userData={email:email,password:password}	 
+  const navigate=useNavigate(); 
+  const dispatch = useDispatch<AppDispatch>(); 	
+   
   
-//  window.location.href = '/';
+   const isAuthenticated = useSelector(selectIsAuthenticated)
+  const handleSubmit = (e: SyntheticEvent) => {
+    const userData: TLoginData ={email:email,password:password}	 
+    e.preventDefault();
+
     if (!userData.email || !userData.password) {
 			return;
 		}
-		dispatch(fetchUserLog(userData)); 
-    localStorage.setItem('email',email);
-    localStorage.setItem('password',password);
-    logUser(loginData)
+    
+    dispatch(fetchUserLog(userData))    
+   
+  }
+ 
+  
+    if (isAuthenticated) {     
+      return (
+        <Preloader /> )};
+  
+  
 
-  e.preventDefault();
-  };
+  
 
   return (
     <LoginUI

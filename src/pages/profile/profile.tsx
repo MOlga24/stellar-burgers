@@ -1,14 +1,12 @@
-/* eslint-disable */
-import { AppDispatch, RootState, useSelector } from '..//..//services/store';
+import { AppDispatch, useSelector } from '..//..//services/store';
 import { ProfileUI } from '@ui-pages';
 import { FC, SyntheticEvent, useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import {
   fetchUserUpdate,
   selectLoading,
-  selectRequestStatus,
   selectUser
-} from '..//..//services/slices/Regslice';
+} from '..//..//services/slices/userSlice';
 import { Preloader } from '@ui';
 import { TUser } from '@utils-types';
 
@@ -16,7 +14,6 @@ export const Profile: FC = () => {
   const dispatch = useDispatch<AppDispatch>();
   const loading = useSelector(selectLoading);
   const user = useSelector(selectUser) as TUser;
-  const requestStatus=useSelector(selectRequestStatus);
   const [formValue, setFormValue] = useState({
     name: user.name,
     email: user.email,
@@ -42,11 +39,8 @@ export const Profile: FC = () => {
         name: formValue.name,
         email: formValue.email,
         password: formValue.password
-      })     
-     
+      })
     );
- 
-
   };
 
   const handleCancel = (e: SyntheticEvent) => {
@@ -76,6 +70,4 @@ export const Profile: FC = () => {
       handleInputChange={handleInputChange}
     />
   );
-
-  return null;
 };

@@ -1,34 +1,28 @@
 /* eslint-disable */
-import { FC, useMemo, useState } from 'react';
-import { TIngredient, TOrder } from '@utils-types';
+import { FC, useMemo } from 'react';
+import { TIngredient } from '@utils-types';
 import { BurgerConstructorUI } from '@ui';
 import { useDispatch, useSelector } from 'react-redux';
-import { AppDispatch, RootState } from '@store';
-import {  
+import { AppDispatch } from '@store';
+import {
   clearOrder,
-  fetchOrderBurger, 
+  fetchOrderBurger,
+  getOrderModalData,
+  getOrderRequestSelector
 } from '../../services/slices/orderSlice';
-import { TNewOrderResponse } from 'src/utils/burger-api';
-import { clearBasket } from '..//..//services/slices/basketSlice';
-import { selectIsAuthenticated } from '..//..//services/slices/Regslice';
+import { clearBasket, getItems } from '..//..//services/slices/basketSlice';
+import { selectIsAuthenticated } from '..//..//services/slices/userSlice';
 import { useNavigate } from 'react-router-dom';
 
 export const BurgerConstructor: FC = () => {
-  const basket = useSelector((state: RootState) => state.basket);
+  const navigate = useNavigate();
+  const basket = useSelector(getItems);
   /** TODO: взять переменные constructorItems, orderRequest и orderModalData из стора */
   const dispatch = useDispatch<AppDispatch>();
-const isAuthenticated= useSelector(selectIsAuthenticated);
-  const [orderModalData, setOrderModalData] = useState<TOrder | null>(null);
-const navigate=useNavigate();
-  const onChange = (value: TNewOrderResponse) => {
-    setOrderModalData(value.order);
-    setOrderRequest(!value.success);
-  };
- 
-  const orderRequestinit = useSelector(
-    (state: RootState) => state.order.requestStatus
-  );
-  const [orderRequest, setOrderRequest] = useState(orderRequestinit);
+  const isAuthenticated = useSelector(selectIsAuthenticated);
+
+  const orderModalData = useSelector(getOrderModalData);
+  const orderRequest = useSelector(getOrderRequestSelector);
   const constructorItems: {
     bun: TIngredient | undefined;
     ingredients: TIngredient[];
@@ -36,24 +30,20 @@ const navigate=useNavigate();
     bun: basket.bun,
     ingredients: basket.ingredients
   };
-  const order = useSelector((state: RootState) => state.basket.id);
-  const closeOrderModal = () => {    
-  dispatch(clearOrder(order));
-  setOrderRequest(false);
-  setOrderModalData(null);   
-  dispatch(clearBasket(basket));
+  const order = basket.id;
+  const closeOrderModal = () => {
+    dispatch(clearOrder(order));
+    const orderModalData = null;
+    dispatch(clearBasket(basket));
   };
   const onOrderClick = () => {
-    if(!isAuthenticated){return navigate('/login'); }
-    if (order.length) {
-      setOrderRequest(true);
-      dispatch(fetchOrderBurger(order))
-        .unwrap()
-        .then((payload) => onChange(payload));
-    } else {
-      alert('добавьте заказ');
+    if (!isAuthenticated) {
+      return navigate('/login');
     }
     if (!constructorItems.bun || orderRequest) return;
+
+    dispatch(fetchOrderBurger(order));
+    dispatch(clearBasket(basket));
   };
 
   const price = useMemo(

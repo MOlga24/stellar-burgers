@@ -1,4 +1,3 @@
-/* eslint-disable */
 import { AppDispatch, RootState } from '@store';
 import { ProfileOrdersUI } from '@ui-pages';
 import { FC, useEffect } from 'react';

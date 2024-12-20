@@ -1,5 +1,4 @@
-/* eslint-disable */
-import React, { FC, useRef } from 'react';
+import { FC } from 'react';
 import {
   Button,
   ConstructorElement,
@@ -19,13 +18,10 @@ export const BurgerConstructorUI: FC<BurgerConstructorUIProps> = ({
   onOrderClick,
   closeOrderModal
 }) => (
-  
-  <section className={styles.burger_constructor}   >
-    {constructorItems.bun?
-    (
-      <div  className={`${styles.element} mb-4 mr-4`}>
+  <section className={styles.burger_constructor}>
+    {constructorItems.bun ? (
+      <div className={`${styles.element} mb-4 mr-4`}>
         <ConstructorElement
-     
           type='top'
           isLocked
           text={`${constructorItems.bun.name} (верх)`}
@@ -34,7 +30,7 @@ export const BurgerConstructorUI: FC<BurgerConstructorUIProps> = ({
         />
       </div>
     ) : (
-      <div 
+      <div
         className={`${styles.noBuns} ${styles.noBunsTop} ml-8 mb-4 mr-5 text text_type_main-default`}
       >
         Выберите булки
@@ -44,7 +40,7 @@ export const BurgerConstructorUI: FC<BurgerConstructorUIProps> = ({
       {constructorItems.ingredients.length > 0 ? (
         constructorItems.ingredients.map(
           (item: TConstructorIngredient, index: number) => (
-            <BurgerConstructorElement              
+            <BurgerConstructorElement
               ingredient={item}
               index={index}
               totalItems={constructorItems.ingredients.length}
@@ -53,14 +49,14 @@ export const BurgerConstructorUI: FC<BurgerConstructorUIProps> = ({
           )
         )
       ) : (
-        <div 
+        <div
           className={`${styles.noBuns} ml-8 mb-4 mr-5 text text_type_main-default`}
         >
           Выберите начинку
         </div>
       )}
     </ul>
-    {constructorItems.bun? (
+    {constructorItems.bun ? (
       <div className={`${styles.element} mt-4 mr-4`}>
         <ConstructorElement
           type='bottom'
@@ -97,16 +93,13 @@ export const BurgerConstructorUI: FC<BurgerConstructorUIProps> = ({
       </Modal>
     )}
 
-    {
-orderModalData &&
-     (
+    {orderModalData && (
       <Modal
         onClose={closeOrderModal}
         title={orderRequest ? 'Оформляем заказ...' : ''}
       >
         <OrderDetailsUI orderNumber={orderModalData.number} />
       </Modal>
-    )
-  }
+    )}
   </section>
 );

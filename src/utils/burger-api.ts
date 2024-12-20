@@ -1,12 +1,10 @@
-/* eslint-disable */
-import { PayloadAction } from '@reduxjs/toolkit';
 import { setCookie, getCookie } from './cookie';
-import { TIngredient, TOrder, TOrdersData, TUser } from './types';
+import { TIngredient, TOrder, TUser } from './types';
 
 const URL = process.env.BURGER_API_URL;
 
 const checkResponse = <T>(res: Response): Promise<T> =>
-  res.ok ? res.json()  : res.json().then((err) => Promise.reject(err));
+  res.ok ? res.json() : res.json().then((err) => Promise.reject(err));
 
 type TServerResponse<T> = {
   success: boolean;
@@ -37,8 +35,6 @@ export const refreshToken = (): Promise<TRefreshResponse> =>
       return refreshData;
     });
 
-   
-  
 export const fetchWithRefresh = async <T>(
   url: RequestInfo,
   options: RequestInit
@@ -53,8 +49,6 @@ export const fetchWithRefresh = async <T>(
         (options.headers as { [key: string]: string }).authorization =
           refreshData.accessToken;
       }
-      // localStorage.setItem('refreshToken', refreshData.refreshToken);
-      // setCookie('accessToken', refreshData.accessToken);
       const res = await fetch(url, options);
       return await checkResponse<T>(res);
     } else {
@@ -81,7 +75,7 @@ export const getIngredientsApi = () =>
   fetch(`${URL}/ingredients`)
     .then((res) => checkResponse<TIngredientsResponse>(res))
     .then((data) => {
-      if (data?.success) return data.data; 
+      if (data?.success) return data.data;
       return Promise.reject(data);
     });
 
@@ -121,9 +115,10 @@ export const orderBurgerApi = (data: string[]) =>
       ingredients: data
     })
   }).then((data) => {
-    if (data?.success) {return data }
-    return Promise.reject(data)
-
+    if (data?.success) {
+      return data;
+    }
+    return Promise.reject(data);
   });
 
 type TOrderResponse = TServerResponse<{
@@ -169,9 +164,7 @@ export type TLoginData = {
   password: string;
 };
 
-
 export const loginUserApi = (data: TLoginData) =>
-
   fetch(`${URL}/auth/login`, {
     method: 'POST',
     headers: {
@@ -179,9 +172,8 @@ export const loginUserApi = (data: TLoginData) =>
     },
     body: JSON.stringify(data)
   })
-
     .then((res) => checkResponse<TAuthResponse>(res))
-    .then((data) => {    
+    .then((data) => {
       if (data?.success) return data;
       return Promise.reject(data);
     });
@@ -216,13 +208,11 @@ export const resetPasswordApi = (data: { password: string; token: string }) =>
 
 type TUserResponse = TServerResponse<{ user: TUser }>;
 export const getUserApi = () =>
-fetchWithRefresh<TUserResponse>(`${URL}/auth/user`, {
-     headers: {
-       authorization: getCookie('accessToken')
-     } as HeadersInit,
-   });
-
- 
+  fetchWithRefresh<TUserResponse>(`${URL}/auth/user`, {
+    headers: {
+      authorization: getCookie('accessToken')
+    } as HeadersInit
+  });
 
 export const updateUserApi = (user: Partial<TRegisterData>) =>
   fetchWithRefresh<TUserResponse>(`${URL}/auth/user`, {
@@ -231,8 +221,8 @@ export const updateUserApi = (user: Partial<TRegisterData>) =>
       'Content-Type': 'application/json;charset=utf-8',
       authorization: getCookie('accessToken')
     } as HeadersInit,
-    body: JSON.stringify(user)    
-  })
+    body: JSON.stringify(user)
+  });
 
 export const logoutApi = () =>
   fetch(`${URL}/auth/logout`, {

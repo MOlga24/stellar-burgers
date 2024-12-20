@@ -1,23 +1,29 @@
 /* eslint-disable */
 import { useState, useRef, useEffect, FC } from 'react';
 import { useInView } from 'react-intersection-observer';
-import {  TTabMode } from '@utils-types';
+import { TTabMode } from '@utils-types';
 import { BurgerIngredientsUI } from '../ui/burger-ingredients';
 import { useSelector } from 'react-redux';
-import {  getIngredientsSelector} from '..//..//services/slices';
+import { getIngredientsSelector } from '../../services/slices/burgerSlice';
 
 export const BurgerIngredients: FC = () => {
-
-const ingredients=(useSelector(getIngredientsSelector));
-
+  const ingredients = useSelector(getIngredientsSelector);
   const [currentTab, setCurrentTab] = useState<TTabMode>('bun');
   const titleBunRef = useRef<HTMLHeadingElement>(null);
   const titleMainRef = useRef<HTMLHeadingElement>(null);
   const titleSaucesRef = useRef<HTMLHeadingElement>(null);
 
-const buns=ingredients.filter(v=>{return v.type=='bun'});
- const mains=ingredients.filter(v=>{return v.type=='main'});
- const sauces=ingredients.filter(v=>{if(v.type=='sauce') {return v}});
+  const buns = ingredients.filter((v) => {
+    return v.type == 'bun';
+  });
+  const mains = ingredients.filter((v) => {
+    return v.type == 'main';
+  });
+  const sauces = ingredients.filter((v) => {
+    if (v.type == 'sauce') {
+      return v;
+    }
+  });
   const [bunsRef, inViewBuns] = useInView({
     threshold: 0
   });

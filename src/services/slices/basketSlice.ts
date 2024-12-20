@@ -17,6 +17,7 @@ export const initialState: BasketState = {
 export const basketSlice = createSlice({
   name: 'basket',
   initialState,
+
   reducers: {
     addBun: {
       reducer: (state, { payload }: PayloadAction<TIngredient>) => {
@@ -51,10 +52,13 @@ export const basketSlice = createSlice({
 
       state.ingredients = ingredients;
     }
+  },
+  selectors: {
+    getItems: (state) => state
   }
 });
 
 export const { addBun, removeBun, reorderBasket, clearBasket } =
   basketSlice.actions;
-
+export const { getItems } = basketSlice.selectors;
 export default basketSlice.reducer;

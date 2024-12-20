@@ -1,17 +1,14 @@
-/* eslint-disable */
 import styles from './constructor-page.module.css';
 import { BurgerIngredients } from '../../components';
 import { BurgerConstructor } from '../../components';
 import { Preloader } from '../../components/ui';
 import { FC } from 'react';
-//import { isLoadingSelector } from '@slices';
 import { useSelector } from 'react-redux';
-import { isLoadingSelector } from '@slices';
-
+import { isLoadingSelector } from '..//..//services/slices/burgerSlice';
 
 export const ConstructorPage: FC = () => {
   /** TODO: взять переменную из стора */
- const isIngredientsLoading=useSelector(isLoadingSelector)
+  const isIngredientsLoading = useSelector(isLoadingSelector);
 
   return (
     <>

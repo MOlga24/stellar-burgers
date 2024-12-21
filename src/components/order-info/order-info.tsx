@@ -2,9 +2,8 @@ import { FC, useEffect, useMemo } from 'react';
 import { Preloader } from '../ui/preloader';
 import { OrderInfoUI } from '../ui/order-info';
 import { TIngredient, TOrder } from '@utils-types';
-import { AppDispatch, useSelector } from '..//..//services/store';
+import { useDispatch, useSelector } from '..//..//services/store';
 import { useParams } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
 import {
   fetchOrders,
   getFeedSelector
@@ -23,7 +22,7 @@ export const OrderInfo: FC = () => {
   }
   const orderNumber = ordersData.findIndex(isOrderNumber);
   const orderData = ordersData[orderNumber];
-  const dispatch = useDispatch<AppDispatch>();
+  const dispatch = useDispatch();
 
   useEffect(() => {
     if (!orderData) dispatch(getOrderByNumber(Number(number)));

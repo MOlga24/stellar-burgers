@@ -1,7 +1,6 @@
 import { FC, SyntheticEvent, useState } from 'react';
 import { LoginUI } from '@ui-pages';
-import { useDispatch, useSelector } from 'react-redux';
-import { AppDispatch } from '@store';
+import { useDispatch, useSelector } from '..//..//services/store';
 import { TLoginData } from '..//..//utils/burger-api';
 import {
   fetchUserLog,
@@ -14,7 +13,7 @@ export const Login: FC = () => {
   const [email, setEmail] = useState(localStorage.getItem('email') || '');
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
-  const dispatch = useDispatch<AppDispatch>();
+  const dispatch = useDispatch();
 
   const isAuthenticated = useSelector(selectIsAuthenticated);
   const handleSubmit = (e: SyntheticEvent) => {

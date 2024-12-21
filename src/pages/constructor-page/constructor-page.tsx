@@ -3,7 +3,7 @@ import { BurgerIngredients } from '../../components';
 import { BurgerConstructor } from '../../components';
 import { Preloader } from '../../components/ui';
 import { FC } from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector } from '..//..//services/store';
 import { isLoadingSelector } from '..//..//services/slices/burgerSlice';
 
 export const ConstructorPage: FC = () => {

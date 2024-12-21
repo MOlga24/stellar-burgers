@@ -125,8 +125,8 @@ export const App = () => {
           <Route
             path='/ingredients/:id'
             element={
-              <Modal title='Детали ингредиента' onClose={onClose}>
-                <IngredientDetails />
+              <Modal title='' onClose={onClose}>
+                <IngredientDetails/>
               </Modal>
             }
           />

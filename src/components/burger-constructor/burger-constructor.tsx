@@ -2,48 +2,52 @@
 import { FC, useMemo } from 'react';
 import { TIngredient } from '@utils-types';
 import { BurgerConstructorUI } from '@ui';
-import { useDispatch, useSelector } from 'react-redux';
-import { AppDispatch } from '@store';
+import { useDispatch, useSelector } from '..//..//services/store';
 import {
   clearOrder,
   fetchOrderBurger,
   getOrderModalData,
   getOrderRequestSelector
 } from '../../services/slices/orderSlice';
-import { clearBasket, getItems } from '..//..//services/slices/basketSlice';
+import { getBasketItemsSelector } from '..//..//services/slices/orderSlice';
 import { selectIsAuthenticated } from '..//..//services/slices/userSlice';
 import { useNavigate } from 'react-router-dom';
+import { getIconColor } from '@zlden/react-developer-burger-ui-components/dist/ui/icons/utils';
 
 export const BurgerConstructor: FC = () => {
   const navigate = useNavigate();
-  const basket = useSelector(getItems);
+  const basket = useSelector(getBasketItemsSelector);
   /** TODO: взять переменные constructorItems, orderRequest и orderModalData из стора */
-  const dispatch = useDispatch<AppDispatch>();
+  const dispatch = useDispatch();
   const isAuthenticated = useSelector(selectIsAuthenticated);
-
   const orderModalData = useSelector(getOrderModalData);
   const orderRequest = useSelector(getOrderRequestSelector);
   const constructorItems: {
-    bun: TIngredient | undefined;
+    bun: TIngredient | null;
     ingredients: TIngredient[];
   } = {
-    bun: basket.bun,
-    ingredients: basket.ingredients
+    bun: basket.basket.bun,
+    ingredients: basket.basket.ingredients
   };
-  const order = basket.id;
   const closeOrderModal = () => {
-    dispatch(clearOrder(order));
-    const orderModalData = null;
-    dispatch(clearBasket(basket));
+    dispatch(clearOrder());
   };
   const onOrderClick = () => {
     if (!isAuthenticated) {
       return navigate('/login');
     }
     if (!constructorItems.bun || orderRequest) return;
-
-    dispatch(fetchOrderBurger(order));
-    dispatch(clearBasket(basket));
+    if (constructorItems.bun._id) {
+      const basketIngresientsId = constructorItems.ingredients.map(
+        (item) => item._id
+      );
+      const order = [
+        constructorItems.bun._id,
+        ...basketIngresientsId,
+        constructorItems.bun._id
+      ];
+      dispatch(fetchOrderBurger(order));
+    }
   };
 
   const price = useMemo(

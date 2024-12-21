@@ -3,19 +3,19 @@ import { forwardRef, useMemo } from 'react';
 import { TIngredientsCategoryProps } from './type';
 import { TIngredient } from '@utils-types';
 import { IngredientsCategoryUI } from '../ui/ingredients-category';
-import { useSelector } from 'react-redux';
-import { RootState } from '@store';
+import { useSelector } from '..//..//services/store';
+import { getBasketItemsSelector } from '../../services/slices/orderSlice';
 
 export const IngredientsCategory = forwardRef<
   HTMLUListElement,
   TIngredientsCategoryProps
 >(({ title, titleRef, ingredients }, ref) => {
-  const basket = useSelector((state: RootState) => state.basket);
+  const basket = useSelector(getBasketItemsSelector);
   /** TODO: взять переменную из стора */
 
   const burgerConstructor = {
-    bun: basket.bun,
-    ingredients: basket.ingredients
+    bun: basket.basket.bun,
+    ingredients: basket.basket.ingredients
   };
 
   const ingredientsCounters = useMemo(() => {

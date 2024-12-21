@@ -1,7 +1,6 @@
-import { AppDispatch, useSelector } from '..//..//services/store';
+import { useDispatch, useSelector } from '..//..//services/store';
 import { ProfileUI } from '@ui-pages';
 import { FC, SyntheticEvent, useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
 import {
   fetchUserUpdate,
   selectLoading,
@@ -11,7 +10,7 @@ import { Preloader } from '@ui';
 import { TUser } from '@utils-types';
 
 export const Profile: FC = () => {
-  const dispatch = useDispatch<AppDispatch>();
+  const dispatch = useDispatch();
   const loading = useSelector(selectLoading);
   const user = useSelector(selectUser) as TUser;
   const [formValue, setFormValue] = useState({

@@ -1,28 +1,31 @@
 /* eslint-disable */
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { TOrder } from '@utils-types';
+import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { TIngredient, TOrder } from '@utils-types';
 import {
   getOrderByNumberApi,
   getOrdersApi,
   orderBurgerApi
 } from '../../utils/burger-api';
+import uuid from 'react-uuid';
 
 export interface OrderState {
+  basket: { bun: TIngredient | null; ingredients: TIngredient[] };
   order: TOrder | null;
-  data: string[];
   orders: TOrder[];
   requestStatus: boolean;
+  orderRequest: boolean;
   isOrdersLoading: boolean;
   error: string | undefined;
 }
 
 export const initialState: OrderState = {
-  data: [],
+  basket: { bun: null, ingredients: [] },
   order: null,
   requestStatus: false,
   orders: [],
   isOrdersLoading: false,
-  error: ''
+  error: '',
+  orderRequest: false
 };
 export const fetchOrderBurger = createAsyncThunk(
   'order/neworder',
@@ -51,24 +54,49 @@ export const orderSlice = createSlice({
   name: 'order',
   initialState,
   reducers: {
-    addOrder: (state, action) => {
-      return {
-        ...state,
-        order: action.payload,
-         requestStatus:false
-      };
+    addBun: {
+      reducer: (state, { payload }: PayloadAction<TIngredient>) => {
+        if (payload.type === 'bun') {
+          state.basket.bun = payload;
+        } else {
+          state.basket.ingredients.push(payload);
+        }
+      },
+      prepare: (ingredient: TIngredient) => ({
+        payload: { ...ingredient, id: uuid() }
+      })
+    },
+    removeBun: (state, { payload }) => {
+      state.basket.ingredients = state.basket.ingredients.filter(
+        (b) => state.basket.ingredients.indexOf(b) !== payload
+      );
+    },
+
+    reorderBasket: (
+      state,
+      { payload }: PayloadAction<{ from: number; to: number }>
+    ) => {
+      const { from, to } = payload;
+
+      const ingredients = [...state.basket.ingredients];
+      ingredients.splice(to, 0, ingredients.splice(from, 1)[0]);
+
+      state.basket.ingredients = ingredients;
     },
     getOrders: (state, action) => {
       return { ...state, ordersData: action.payload };
     },
-    clearOrder: (state, action) => {
-      return { ...state, order: null, data: [] };
+    clearOrder: (state) => {
+      state.basket = initialState.basket;
+      state.order = null;
+      state.orderRequest = false;
     }
   },
   selectors: {
-    getOrderRequestSelector: (state) => state.requestStatus,
+    getBasketItemsSelector: (state) => state,
+    getOrderRequestSelector: (state) => state.orderRequest,
 
-  isOrderLoadingSelector: (state) => state.isOrdersLoading,
+    isOrderLoadingSelector: (state) => state.isOrdersLoading,
 
     getOrderModalData: (state) => state.order
   },
@@ -76,40 +104,46 @@ export const orderSlice = createSlice({
     builder
       .addCase(fetchOrderBurger.pending, (state, action) => {
         state.isOrdersLoading = true;
-        state.requestStatus = true;
+        state.orderRequest = true;
       })
       .addCase(fetchOrderBurger.fulfilled, (state, action) => {
         state.order = action.payload.order;
-        state.requestStatus = false;
-        state.error = '';
+        state.orderRequest = false;
+        state.isOrdersLoading = false;
+        (state.basket.bun = null),
+          (state.basket.ingredients = []),
+          (state.error = '');
       })
       .addCase(fetchOrderBurger.rejected, (state, action) => {
         state.error = action.error.message;
         state.isOrdersLoading = false;
-        state.requestStatus = false;
+        state.orderRequest = false;
       })
       .addCase(fetchUserOrders.fulfilled, (state, action) => {
+        state.requestStatus = false;
         state.orders = action.payload;
-      state.isOrdersLoading = false;
+        state.isOrdersLoading = false;
         state.error = '';
       })
       .addCase(fetchUserOrders.pending, (state) => {
-        state.requestStatus= true;
+        state.requestStatus = true;
         state.isOrdersLoading = true;
       })
       .addCase(fetchUserOrders.rejected, (state, action) => {
         state.orders = [];
-        state.requestStatus=false
-        state.isOrdersLoading= false;
+        state.requestStatus = false;
+        state.isOrdersLoading = false;
         state.error = action.error.message;
       });
   }
 });
 
-export const { addOrder, getOrders, clearOrder } = orderSlice.actions;
+export const { addBun, getOrders, clearOrder, removeBun, reorderBasket } =
+  orderSlice.actions;
 export const {
+  getBasketItemsSelector,
   getOrderRequestSelector,
- isOrderLoadingSelector,
+  isOrderLoadingSelector,
   getOrderModalData
 } = orderSlice.selectors;
 export default orderSlice.reducer;

@@ -12,7 +12,6 @@ import {
 import { getBasketItemsSelector } from '..//..//services/slices/orderSlice';
 import { selectIsAuthenticated } from '..//..//services/slices/userSlice';
 import { useNavigate } from 'react-router-dom';
-import { getIconColor } from '@zlden/react-developer-burger-ui-components/dist/ui/icons/utils';
 
 export const BurgerConstructor: FC = () => {
   const navigate = useNavigate();

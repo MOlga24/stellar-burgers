@@ -7,7 +7,7 @@ export const IngredientDetailsUI: FC<IngredientDetailsUIProps> = memo(
       ingredientData;
 
     return (
-      <div className={styles.content}>
+      <div className={styles.content} data-cy={'ingredient_modal'}>
         <h2
           className={`${styles.title} text text_type_main-large mt-10 mb-5 pl-5`}
         >

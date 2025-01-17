@@ -1,21 +1,14 @@
 import { configureStore } from '@reduxjs/toolkit';
-import { burgerSlice } from './burgerSlice';
 import { mockBun, mockIngredient, mockStore } from './mockData';
 import orderSlice, {
   addIngredient,
   clearOrder,
   fetchOrderBurger,
   fetchUserOrders,
-  getBasketItemsSelector,
-  getOrderModalData,
-  getOrders,
   initialState,
   removeIngredient,
   reorderIngredients
 } from './orderSlice';
-import { error } from 'console';
-import uuid from 'react-uuid';
-
 function initStore() {
   return configureStore({
     reducer: orderSlice,
@@ -91,14 +84,14 @@ test('тест передвинуть ингредиент вниз', () => {
   expect(after.basket.ingredients[index - 1]).toEqual(firstIngredient);
 });
 describe('тестирование асинхронных экшенов', () => {
-  test('Test запроса заказа бургера ', () => {
+  test('тест запроса заказа бургера ', () => {
     const state = orderSlice(
       initialState,
       fetchOrderBurger.pending('', [], '')
     );
     expect(state.orderRequest).toBe(true);
   });
-  test('Test реджекта запроса заказа бургера ', () => {
+  test('тест реджекта запроса заказа бургера ', () => {
     const mockAnswer = { name: 'test', message: 'error' };
     const store = initStore();
     const state = orderSlice(
@@ -111,7 +104,7 @@ describe('тестирование асинхронных экшенов', () =>
   });
 });
 describe('тестирование асинхронных экшенов для заказов пользователя', () => {
-  test('Test запроса заказов пользователя ', () => {
+  test('тest запроса заказов пользователя ', () => {
     const state = orderSlice(initialState, fetchUserOrders.pending(''));
     expect(state.requestStatus).toBe(true);
     expect(state.isOrdersLoading).toBe(true);
@@ -128,7 +121,7 @@ describe('тестирование асинхронных экшенов для 
   });
 });
 test('тест удаления данных заказа и очистки корзины', () => {
-  const before = {    
+  const before = {
     basket: {
       bun: mockStore.constructorItems.bun,
       ingredients: mockStore.constructorItems.ingredients
@@ -140,14 +133,14 @@ test('тест удаления данных заказа и очистки ко
     error: '',
     orderRequest: true
   };
-const after=orderSlice(before,clearOrder());
-expect(after.basket).toEqual(initialState.basket);
-expect(after.order).toEqual(initialState.order);
-expect(after.orderRequest).toEqual(initialState.orderRequest);
+  const after = orderSlice(before, clearOrder());
+  expect(after.basket).toEqual(initialState.basket);
+  expect(after.order).toEqual(initialState.order);
+  expect(after.orderRequest).toEqual(initialState.orderRequest);
 });
 
 // test('получение заказов', () => {
-//   const after =orderSlice(initialState,getOrders(initialState.orders)) 
+//   const after =orderSlice(initialState,getOrders(initialState.orders))
 // //   const store = initStore();
 // //   const initialOrders = selectOrders(store.getState()).length;
 // //   store.dispatch(removeOrders());
@@ -162,20 +155,3 @@ test('тест удаления заказа', () => {
   const order = store.getState().order;
   expect(order).toBe(null);
 });
-
-// test('Test setErrorText', () => {
-//   const store = initStore();
-//   store.dispatch(setErrorText('my test error'));
-//   const errorText = selectErrorText(store.getState());
-//   expect(errorText).toBe('my test error');
-// });
-
-// test('Test removeErrorText', () => {
-//   const store = initStore();
-//   store.dispatch(setErrorText('Error here!'));
-//   store.dispatch(removeErrorText());
-//   const errorText = selectErrorText(store.getState());
-//   expect(errorText).toBe('');
-// });
-
-// });

@@ -88,7 +88,7 @@ export const userSlice = createSlice({
   initialState,
   reducers: {
     authChecked: (state) => {
-      state.userCheck = true;
+      state.userCheck = true; 
     }
   },
   selectors: {
@@ -163,10 +163,10 @@ export const userSlice = createSlice({
         state.isLoading = false;
       })
       .addCase(fetchUserLogOut.pending, (state, action) => {
-        if (action.payload) {
+        // if (action.payload) {
           state.isAuthenticated = true;
           state.isLoading = true;
-        }
+        // }
       });
   }
 });

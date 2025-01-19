@@ -11,7 +11,6 @@ describe('тест заказа', () => {
       JSON.stringify('testRefreshToken')
     );
     cy.setCookie('accessToken', 'testAccessToken');
-
     cy.visit('http://localhost:4000');
     cy.viewport(1300, 800);
   });

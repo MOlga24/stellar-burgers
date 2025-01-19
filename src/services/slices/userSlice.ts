@@ -67,10 +67,10 @@ export const fetchUserUpdate = createAsyncThunk(
   'userLog/fetchUserupdate',
   updateUserApi
 );
-export const fetchUserLogOut = createAsyncThunk('user/logout', async () =>
-  logoutApi()
-);
-export const logoutUser = createAsyncThunk(
+// export const fetchUserLogOut = createAsyncThunk('user/logout', async () =>
+//   logoutApi()
+// );
+export const fetchUserLogOut = createAsyncThunk(
   'user/logoutUser',
   async (_, { rejectWithValue }) => {
     try {
@@ -88,7 +88,7 @@ export const userSlice = createSlice({
   initialState,
   reducers: {
     authChecked: (state) => {
-      state.userCheck = true; 
+      state.userCheck = true;
     }
   },
   selectors: {
@@ -105,6 +105,7 @@ export const userSlice = createSlice({
         state.isAuthenticated = false;
         state.user = null;
         state.isLoading = true;
+        state.error = '';
       })
       .addCase(fetchUserReg.fulfilled, (state, action) => {
         state.user = action.payload;
@@ -114,6 +115,7 @@ export const userSlice = createSlice({
       .addCase(fetchUserReg.rejected, (state, action) => {
         state.isAuthenticated = false;
         state.isLoading = false;
+        state.error = action.error.message;
       })
       .addCase(fetchUserApi.fulfilled, (state, action) => {
         state.isAuthenticated = true;
@@ -121,19 +123,22 @@ export const userSlice = createSlice({
         state.isLoading = false;
         state.user = action.payload.user;
       })
-      .addCase(fetchUserApi.rejected, (state) => {
+      .addCase(fetchUserApi.rejected, (state, action) => {
         state.isAuthenticated = false;
         state.user = null;
         state.userCheck = true;
         state.isLoading = false;
+        state.error = action.error.message;
       })
       .addCase(fetchUserApi.pending, (state) => {
         state.isAuthenticated = false;
         state.user = null;
         state.isLoading = true;
+        state.error = '';
       })
       .addCase(fetchUserLog.pending, (state) => {
         state.isLoading = true;
+        state.error = '';
       })
       .addCase(fetchUserLog.fulfilled, (state, action) => {
         state.user = action.payload.user;
@@ -146,9 +151,18 @@ export const userSlice = createSlice({
         state.userCheck = true;
         state.error = action.error.message;
       })
+      .addCase(fetchUserUpdate.pending, (state, action) => {
+        state.isAuthenticated = true;
+        state.isLoading = true;
+      })
       .addCase(fetchUserUpdate.fulfilled, (state, action) => {
-        state.error = '';
         state.user = action.payload.user;
+        state.isAuthenticated = true;
+        state.isLoading = false;
+      })
+      .addCase(fetchUserUpdate.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.error.message;
       })
       .addCase(fetchUserLogOut.fulfilled, (state, action) => {
         state.user = null;
@@ -159,13 +173,15 @@ export const userSlice = createSlice({
       })
       .addCase(fetchUserLogOut.rejected, (state, action) => {
         state.user = null;
-        state.isAuthenticated = true;
+        state.isAuthenticated = false;
         state.isLoading = false;
+        state.error = action.error.message;
       })
       .addCase(fetchUserLogOut.pending, (state, action) => {
         // if (action.payload) {
-          state.isAuthenticated = true;
-          state.isLoading = true;
+        state.isAuthenticated = true;
+        state.isLoading = true;
+        state.error = '';
         // }
       });
   }

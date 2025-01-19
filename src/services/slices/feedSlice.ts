@@ -51,6 +51,7 @@ export const feedSlice = createSlice({
       })
       .addCase(fetchOrders.pending, (state) => {
         state.isLoading = true;
+        state.error = '';
       })
       .addCase(fetchOrders.rejected, (state, action) => {
         state.isLoading = false;
@@ -58,6 +59,7 @@ export const feedSlice = createSlice({
       })
       .addCase(getOrderByNumber.pending, (state) => {
         state.isLoading = true;
+        state.error = '';
       })
       .addCase(getOrderByNumber.fulfilled, (state, action) => {
         state.isLoading = false;

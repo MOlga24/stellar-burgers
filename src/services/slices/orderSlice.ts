@@ -103,6 +103,7 @@ export const orderSlice = createSlice({
       .addCase(fetchOrderBurger.pending, (state) => {
         state.isOrdersLoading = true;
         state.orderRequest = true;
+        state.error =''
       })
       .addCase(fetchOrderBurger.fulfilled, (state, action) => {
         state.order = action.payload.order;
@@ -126,6 +127,7 @@ export const orderSlice = createSlice({
       .addCase(fetchUserOrders.pending, (state) => {
         state.requestStatus = true;
         state.isOrdersLoading = true;
+        state.error ='';
       })
       .addCase(fetchUserOrders.rejected, (state, action) => {
         state.orders = [];

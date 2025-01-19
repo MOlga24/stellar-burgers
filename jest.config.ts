@@ -103,6 +103,7 @@ const config: Config = {
 
   // A preset that is used as a base for Jest's configuration
  preset: 'ts-jest',
+ testEnvironment: "jsdom",
  transform: {
   // '^.+\\.[tj]sx?$' для обработки файлов js/ts с помощью `ts-jest`
   // '^.+\\.m?[tj]sx?$' для обработки файлов js/ts/mjs/mts с помощью `ts-jest`

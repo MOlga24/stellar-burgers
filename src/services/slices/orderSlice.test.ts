@@ -26,11 +26,45 @@ function initStore() {
     }
   });
 }
-describe('тестирование экшенов', () => {
+const testOrders = {
+  orders: [
+    {
+      _id: '664e927097ede0001d06bdb9',
+      ingredients: [
+        '643d69a5c3f7b9001cfa093d',
+        '643d69a5c3f7b9001cfa093e',
+        '643d69a5c3f7b9001cfa093d'
+      ],
+      status: 'done',
+      name: 'Флюоресцентный люминесцентный бургер',
+      createdAt: '2024-05-23T00:48:48.039Z',
+      updatedAt: '2024-05-23T00:48:48.410Z',
+      number: 40680
+    },
+    {
+      _id: '664e85e497ede0001d06bda7',
+      ingredients: [
+        '643d69a5c3f7b9001cfa093d',
+        '643d69a5c3f7b9001cfa093d',
+        '643d69a5c3f7b9001cfa093e'
+      ],
+      status: 'done',
+      name: 'Флюоресцентный люминесцентный бургер',
+      createdAt: '2024-05-22T23:55:16.472Z',
+      updatedAt: '2024-05-22T23:55:16.866Z',
+      number: 40679
+    }
+  ],
+  success: true,
+  total: 2,
+  totalToday: 2
+};
+describe('тестирование экшенов конструктора заказа', () => {
   test('тест добавления булки', () => {
     const newState = orderSlice(initialState, addIngredient(mockBun));
     expect(newState.basket.bun).toEqual({ ...mockBun, id: expect.any(String) });
   });
+
   test('тест добавления ингредиентов', () => {
     const newState = orderSlice(initialState, addIngredient(mockIngredient));
     expect(newState.basket.ingredients.length).toEqual(1);
@@ -83,43 +117,91 @@ test('тест передвинуть ингредиент вниз', () => {
   );
   expect(after.basket.ingredients[index - 1]).toEqual(firstIngredient);
 });
+const newOrder = {
+  success: true,
+  name: 'Флюоресцентный люминесцентный бургер',
+  order: {
+    _id: '6627770797ede0001d067400',
+    status: 'done',
+    createdAt: '2024-04-23T08:53:27.817Z',
+    updatedAt: '2024-04-23T08:53:28.481Z',
+    number: 38671,
+    name: 'Флюоресцентный люминесцентный бургер',
+    ingredients: [
+      '643d69a5c3f7b9001cfa093d',
+      '643d69a5c3f7b9001cfa093e',
+      '643d69a5c3f7b9001cfa093e',
+      '643d69a5c3f7b9001cfa093d'
+    ]
+  }
+};
+
 describe('тестирование асинхронных экшенов', () => {
   test('тест запроса заказа бургера ', () => {
-    const state = orderSlice(
-      initialState,
+    const newState = orderSlice(
+      { ...initialState, error: 'test error text' },
+      fetchOrderBurger.fulfilled(newOrder, '', [])
+    );
+    expect(newState.order).toBe(newOrder.order);
+    expect(newState.orderRequest).toBe(false);
+    expect(newState.isOrdersLoading).toBe(false);
+    expect(newState.basket).toStrictEqual({ bun: null, ingredients: [] });
+    expect(newState.error).toBe('');
+  });
+
+  test('тест запроса заказа бургера ', () => {
+    const newState = orderSlice(
+      { ...initialState, error: 'test error text' },
       fetchOrderBurger.pending('', [], '')
     );
-    expect(state.orderRequest).toBe(true);
+    expect(newState.orderRequest).toBe(true);
+    expect(newState.error).toBe('');
   });
+
   test('тест реджекта запроса заказа бургера ', () => {
     const mockAnswer = { name: 'test', message: 'error' };
-    const store = initStore();
-    const state = orderSlice(
-      initialState,
+    const newState = orderSlice(
+      { ...initialState, error: '' },
       fetchOrderBurger.rejected(mockAnswer, '', [])
     );
-    const error = store.getState().error;
-    expect(state.orderRequest).toBe(false);
-    expect(error).toBe('test error text');
+    expect(newState.orderRequest).toBe(false);
+    expect(newState.error).toBe(mockAnswer.message);
   });
 });
+
 describe('тестирование асинхронных экшенов для заказов пользователя', () => {
-  test('тest запроса заказов пользователя ', () => {
-    const state = orderSlice(initialState, fetchUserOrders.pending(''));
-    expect(state.requestStatus).toBe(true);
-    expect(state.isOrdersLoading).toBe(true);
+  test('тест запроса заказов пользователя ', () => {
+    const newState = orderSlice(
+      { ...initialState, error: 'test error text' },
+      fetchUserOrders.pending('')
+    );
+    expect(newState.requestStatus).toBe(true);
+    expect(newState.isOrdersLoading).toBe(true);
+    expect(newState.error).toBe('');
   });
+
+  test('тест выполненного запроса заказов пользователя ', () => {
+    const newState = orderSlice(
+      initialState,
+      fetchUserOrders.fulfilled(testOrders.orders, '')
+    );
+    expect(newState.requestStatus).toBe(false);
+    expect(newState.isOrdersLoading).toBe(false);
+    expect(newState.orders).toBe(testOrders.orders);
+  });
+
   test('тест реджекта запроса заказов пользователя', () => {
     const mockAnswer = { name: 'test', message: 'error' };
-    const state = orderSlice(
-      initialState,
+    const newState = orderSlice(
+      { ...initialState, error: '' },
       fetchUserOrders.rejected(mockAnswer, '')
     );
-    expect(state.orderRequest).toBe(false);
-    expect(state.isOrdersLoading).toBe(false);
-    return expect(fetchUserOrders()).rejects.toThrow();
+    expect(newState.orderRequest).toBe(false);
+    expect(newState.isOrdersLoading).toBe(false);
+    expect(newState.error).toBe(mockAnswer.message);
   });
 });
+
 test('тест удаления данных заказа и очистки корзины', () => {
   const before = {
     basket: {
@@ -137,21 +219,4 @@ test('тест удаления данных заказа и очистки ко
   expect(after.basket).toEqual(initialState.basket);
   expect(after.order).toEqual(initialState.order);
   expect(after.orderRequest).toEqual(initialState.orderRequest);
-});
-
-// test('получение заказов', () => {
-//   const after =orderSlice(initialState,getOrders(initialState.orders))
-// //   const store = initStore();
-// //   const initialOrders = selectOrders(store.getState()).length;
-// //   store.dispatch(removeOrders());
-// //   const orders = selectOrders(store.getState()).length;
-// //   expect(initialOrders).toBe(2);
-//  expect(after.orders).toBe(0);
-// });
-
-test('тест удаления заказа', () => {
-  const store = initStore();
-  store.dispatch(clearOrder());
-  const order = store.getState().order;
-  expect(order).toBe(null);
 });

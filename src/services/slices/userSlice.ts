@@ -63,13 +63,12 @@ export const fetchUserLog = createAsyncThunk(
 export const fetchUserApi = createAsyncThunk('user/getUser', async () =>
   getUserApi()
 );
+
 export const fetchUserUpdate = createAsyncThunk(
   'userLog/fetchUserupdate',
   updateUserApi
 );
-// export const fetchUserLogOut = createAsyncThunk('user/logout', async () =>
-//   logoutApi()
-// );
+
 export const fetchUserLogOut = createAsyncThunk(
   'user/logoutUser',
   async (_, { rejectWithValue }) => {

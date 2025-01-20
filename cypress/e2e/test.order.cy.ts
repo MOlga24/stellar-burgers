@@ -37,7 +37,7 @@ describe('тест заказа', () => {
     cy.get(`[data-cy=new_order_total] button`)
       .contains('Оформить заказ')
       .click();
-   cy.wait('@postOrder');
+    cy.wait('@postOrder');
     cy.get(`[data-cy=new_order_number]`).contains('40763').should('exist');
     cy.get(`[data-cy=close_modal_btn]`).click();
     cy.get('[data-cy=modal]').should('not.exist');

@@ -9,9 +9,10 @@ import {
   fetchUserUpdate
 } from './userSlice';
 
-const newUser = { 
-  email: 'om@mail.ru', 
-  name: 'omtest12' };
+const newUser = {
+  email: 'om@mail.ru',
+  name: 'omtest12'
+};
 
 const newUserReg = {
   email: 'om@mail.ru',
@@ -19,13 +20,15 @@ const newUserReg = {
   password: 'password'
 };
 
-const newUserLog = { 
+const newUserLog = {
   email: 'om@mail.ru',
-  password: 'password' };
+  password: 'password'
+};
 
 const updateUser = {
   email: 'om@mail.ru',
-  name: 'omtest123' };
+  name: 'omtest123'
+};
 
 describe('тестирование экшенов для слайса пользователя', () => {
   test('тест редьюсера authChecked', () => {
@@ -79,6 +82,17 @@ describe('тестирование асинхронных экшенов для 
     expect(newState.error).toBe('');
   });
 
+  test('тест выполненного запроса api пользователя ', () => {
+    const newState = userSlice.reducer(
+      { ...initialState, error: 'test error' },
+      fetchUserApi.fulfilled({ success: true, user: newUser }, '')
+    );
+    expect(newState.isAuthenticated).toBe(true);
+    expect(newState.user).toBe(newUser);
+    expect(newState.userCheck).toBe(true);
+    expect(newState.isLoading).toBe(false);
+  });
+
   test('тест реджекта запроса api пользователя', () => {
     const mockAnswer = { name: 'test', message: 'error' };
     const newState = userSlice.reducer(
@@ -130,7 +144,7 @@ describe('тестирование асинхронных экшенов для 
     expect(newState.isLoading).toBe(false);
     expect(newState.error).toBe(mockAnswer.message);
   });
-  
+
   test('тест запроса апдейта пользователя ', () => {
     const newState = userSlice.reducer(
       initialState,
@@ -191,15 +205,15 @@ describe('тестирование асинхронных экшенов для 
     expect(newState.isAuthenticated).toBe(false);
     expect(newState.isLoading).toBe(false);
   });
-});
 
-test('тест реджекта запроса логаута пользователя', () => {
-  const mockAnswer = { name: 'test', message: 'error' };
-  const newState = userSlice.reducer(
-    { ...initialState, isAuthenticated: true, user: newUser, error: '' },
-    fetchUserLogOut.rejected(mockAnswer, '')
-  );
-  expect(newState.isAuthenticated).toBe(false);
-  expect(newState.isLoading).toBe(false);
-  expect(newState.error).toBe(mockAnswer.message);
+  test('тест реджекта запроса логаута пользователя', () => {
+    const mockAnswer = { name: 'test', message: 'error' };
+    const newState = userSlice.reducer(
+      { ...initialState, isAuthenticated: true, user: newUser, error: '' },
+      fetchUserLogOut.rejected(mockAnswer, '')
+    );
+    expect(newState.isAuthenticated).toBe(false);
+    expect(newState.isLoading).toBe(false);
+    expect(newState.error).toBe(mockAnswer.message);
+  });
 });

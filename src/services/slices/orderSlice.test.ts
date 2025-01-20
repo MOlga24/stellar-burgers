@@ -9,23 +9,7 @@ import orderSlice, {
   removeIngredient,
   reorderIngredients
 } from './orderSlice';
-function initStore() {
-  return configureStore({
-    reducer: orderSlice,
-    preloadedState: {
-      basket: {
-        bun: mockStore.constructorItems.bun,
-        ingredients: mockStore.constructorItems.ingredients
-      },
-      order: null,
-      requestStatus: mockStore.orderRequest,
-      isOrdersLoading: mockStore.isLoading,
-      orders: mockStore.orders,
-      error: mockStore.error,
-      orderRequest: false
-    }
-  });
-}
+
 const testOrders = {
   orders: [
     {
@@ -200,23 +184,22 @@ describe('тестирование асинхронных экшенов для 
     expect(newState.isOrdersLoading).toBe(false);
     expect(newState.error).toBe(mockAnswer.message);
   });
-});
-
-test('тест удаления данных заказа и очистки корзины', () => {
-  const before = {
-    basket: {
-      bun: mockStore.constructorItems.bun,
-      ingredients: mockStore.constructorItems.ingredients
-    },
-    order: mockStore.orderModalData,
-    requestStatus: true,
-    orders: [],
-    isOrdersLoading: false,
-    error: '',
-    orderRequest: true
-  };
-  const after = orderSlice(before, clearOrder());
-  expect(after.basket).toEqual(initialState.basket);
-  expect(after.order).toEqual(initialState.order);
-  expect(after.orderRequest).toEqual(initialState.orderRequest);
+  test('тест удаления данных заказа и очистки корзины', () => {
+    const before = {
+      basket: {
+        bun: mockStore.constructorItems.bun,
+        ingredients: mockStore.constructorItems.ingredients
+      },
+      order: mockStore.orderModalData,
+      requestStatus: true,
+      orders: [],
+      isOrdersLoading: false,
+      error: '',
+      orderRequest: true
+    };
+    const after = orderSlice(before, clearOrder());
+    expect(after.basket).toEqual(initialState.basket);
+    expect(after.order).toEqual(initialState.order);
+    expect(after.orderRequest).toEqual(initialState.orderRequest);
+  });
 });

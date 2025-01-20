@@ -11,7 +11,7 @@ describe('тест заказа', () => {
       JSON.stringify('testRefreshToken')
     );
     cy.setCookie('accessToken', 'testAccessToken');
-    cy.visit('http://localhost:4000');
+    cy.visit('/');
     cy.viewport(1300, 800);
   });
   const noBunSelector1 = `[data-cy=no_bun_text_1]`;

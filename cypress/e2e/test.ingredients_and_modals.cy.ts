@@ -6,7 +6,7 @@ describe('тест конструктора', () => {
     window.localStorage.setItem('refreshToken', 'testRefreshToken');
     cy.setCookie('accessToken', 'testAccessToken');
     cy.intercept('GET', 'api/ingredients', { fixture: 'ingredients.json' });
-    cy.visit('http://localhost:4000');
+    cy.visit('/');
     cy.viewport(1300, 800);
   });
 

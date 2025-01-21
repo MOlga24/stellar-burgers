@@ -54,7 +54,7 @@ export const orderSlice = createSlice({
   name: 'order',
   initialState,
   reducers: {
-    addBun: {
+    addIngredient: {
       reducer: (state, { payload }: PayloadAction<TIngredient>) => {
         if (payload.type === 'bun') {
           state.basket.bun = payload;
@@ -66,13 +66,13 @@ export const orderSlice = createSlice({
         payload: { ...ingredient, id: uuid() }
       })
     },
-    removeBun: (state, { payload }) => {
+    removeIngredient: (state, { payload }) => {
       state.basket.ingredients = state.basket.ingredients.filter(
         (b) => state.basket.ingredients.indexOf(b) !== payload
       );
     },
 
-    reorderBasket: (
+    reorderIngredients: (
       state,
       { payload }: PayloadAction<{ from: number; to: number }>
     ) => {
@@ -95,16 +95,15 @@ export const orderSlice = createSlice({
   selectors: {
     getBasketItemsSelector: (state) => state,
     getOrderRequestSelector: (state) => state.orderRequest,
-
     isOrderLoadingSelector: (state) => state.isOrdersLoading,
-
     getOrderModalData: (state) => state.order
   },
   extraReducers: (builder) => {
     builder
-      .addCase(fetchOrderBurger.pending, (state, action) => {
+      .addCase(fetchOrderBurger.pending, (state) => {
         state.isOrdersLoading = true;
         state.orderRequest = true;
+        state.error =''
       })
       .addCase(fetchOrderBurger.fulfilled, (state, action) => {
         state.order = action.payload.order;
@@ -128,6 +127,7 @@ export const orderSlice = createSlice({
       .addCase(fetchUserOrders.pending, (state) => {
         state.requestStatus = true;
         state.isOrdersLoading = true;
+        state.error ='';
       })
       .addCase(fetchUserOrders.rejected, (state, action) => {
         state.orders = [];
@@ -138,7 +138,7 @@ export const orderSlice = createSlice({
   }
 });
 
-export const { addBun, getOrders, clearOrder, removeBun, reorderBasket } =
+export const { addIngredient, getOrders, clearOrder, removeIngredient, reorderIngredients } =
   orderSlice.actions;
 export const {
   getBasketItemsSelector,

@@ -37,6 +37,7 @@ export const burgerSlice = createSlice({
     builder
       .addCase(fetchIngredients.pending, (state, action) => {
         state.isLoading = true;
+        state.error = '';
       })
       .addCase(fetchIngredients.fulfilled, (state, action) => {
         state.ingredients = action.payload;
@@ -45,7 +46,7 @@ export const burgerSlice = createSlice({
       })
       .addCase(fetchIngredients.rejected, (state, action) => {
         state.error = action.error.message;
-        state.isLoading = false;
+        state.isLoading = false;      
       });
   }
 });
